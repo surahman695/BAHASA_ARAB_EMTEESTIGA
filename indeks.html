@@ -1,1 +1,2082 @@
+<!DOCTYPE html>
+<html lang="id" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bahasa Arab Matsaga - Media Pembelajaran Interaktif</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-dark: #115e59;
+            --primary-light: #ccfbf1;
+            --secondary: #f59e0b;
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .arab {
+            font-family: 'Amiri', serif;
+            direction: rtl;
+            line-height: 2.1;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        header p {
+            font-size: 0.875rem;
+            color: var(--primary-light);
+            margin-top: 0.25rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1360px;
+            margin: 1.5rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            background: var(--bg-card);
+            border-radius: 1rem;
+            padding: 1.25rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            position: sticky;
+            top: 100px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .kelas-group {
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+
+        .kelas-btn {
+            width: 100%;
+            background: #f0fdfa;
+            color: var(--primary-dark);
+            border: none;
+            padding: 0.875rem 1rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .kelas-btn:hover {
+            background: var(--primary-light);
+        }
+
+        .kelas-btn .arrow {
+            transition: transform 0.25s ease;
+            font-size: 0.75rem;
+        }
+
+        .kelas-group.open .kelas-btn .arrow {
+            transform: rotate(180deg);
+        }
+
+        .bab-list {
+            display: none;
+            background: white;
+            padding: 0.5rem;
+        }
+
+        .kelas-group.open .bab-list {
+            display: block;
+        }
+
+        .bab-item {
+            width: 100%;
+            text-align: left;
+            background: transparent;
+            border: none;
+            padding: 0.65rem 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bab-item:hover {
+            background: #f8fafc;
+        }
+
+        .bab-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .bab-item .bab-arab {
+            font-family: 'Amiri', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            direction: rtl;
+            text-align: right;
+        }
+
+        .bab-item .bab-latin {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            margin-top: 0.15rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            background: var(--bg-card);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            min-height: 75vh;
+        }
+
+        .chapter-header {
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 1.25rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .badge-kelas {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .chapter-title-latin {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .chapter-title-arab {
+            font-family: 'Amiri', serif;
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            direction: rtl;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.75rem;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.75rem;
+        }
+
+        .tab-btn {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 0.65rem 1.25rem;
+            border-radius: 0.65rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .tab-btn:hover {
+            background: #f1f5f9;
+            color: var(--text-main);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 2px 4px rgba(15, 118, 110, 0.25);
+        }
+
+        /* Kosakata Grid */
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 1rem;
+        }
+
+        .vocab-card {
+            border: 1px solid var(--border);
+            border-radius: 0.85rem;
+            padding: 1.25rem;
+            text-align: center;
+            background: #ffffff;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .vocab-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px -2px rgba(0,0,0,0.06);
+            border-color: var(--primary);
+        }
+
+        .vocab-arab {
+            font-family: 'Amiri', serif;
+            font-size: 2.1rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 0.4rem;
+            direction: rtl;
+        }
+
+        .vocab-latin {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-bottom: 0.25rem;
+        }
+
+        .vocab-arti {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-main);
+            margin-bottom: 0.85rem;
+        }
+
+        .audio-btn {
+            background: #f0fdfa;
+            color: var(--primary);
+            border: 1px solid #ccfbf1;
+            padding: 0.4rem 0.85rem;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            transition: all 0.2s;
+            margin: 0 auto;
+        }
+
+        .audio-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Hiwar List */
+        .hiwar-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .hiwar-item {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 0.85rem;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .hiwar-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .speaker-badge {
+            background: var(--primary);
+            color: white;
+            padding: 0.2rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .hiwar-arab {
+            font-family: 'Amiri', serif;
+            font-size: 1.75rem;
+            text-align: right;
+            direction: rtl;
+            color: var(--text-main);
+            line-height: 2;
+        }
+
+        .hiwar-indo {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            border-top: 1px dashed var(--border);
+            padding-top: 0.5rem;
+        }
+
+        /* Bacaan (Qira'ah) */
+        .bacaan-controls {
+            margin-bottom: 1.25rem;
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-outline {
+            background: white;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-light);
+        }
+
+        .bacaan-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 0.85rem;
+            padding: 1.25rem;
+            margin-bottom: 0.85rem;
+        }
+
+        .bacaan-arab {
+            font-family: 'Amiri', serif;
+            font-size: 1.8rem;
+            direction: rtl;
+            text-align: right;
+            color: var(--text-main);
+            line-height: 2.1;
+        }
+
+        .bacaan-indo {
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px dashed var(--border);
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Latihan Soal */
+        .quiz-card {
+            border: 1px solid var(--border);
+            border-radius: 0.85rem;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            background: #ffffff;
+        }
+
+        .quiz-q {
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 0.65rem;
+        }
+
+        .quiz-opt {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.6rem;
+            background: #f8fafc;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .quiz-opt:hover:not(:disabled) {
+            background: #f1f5f9;
+            border-color: var(--primary);
+        }
+
+        .quiz-opt.correct {
+            background: #d1fae5;
+            border-color: var(--success);
+            color: #065f46;
+            font-weight: 700;
+        }
+
+        .quiz-opt.wrong {
+            background: #fee2e2;
+            border-color: var(--danger);
+            color: #991b1b;
+        }
+
+        .score-banner {
+            background: #f0fdfa;
+            border: 1px solid var(--primary);
+            padding: 1rem 1.25rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        /* Game Susun Kata */
+        .game-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .game-progress {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .game-target-indo {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+        }
+
+        .answer-area {
+            min-height: 75px;
+            background: white;
+            border: 2px dashed #cbd5e1;
+            border-radius: 0.85rem;
+            padding: 0.85rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            justify-content: center;
+            align-items: center;
+            direction: rtl;
+            margin-bottom: 1.25rem;
+        }
+
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            justify-content: center;
+            direction: rtl;
+            margin-bottom: 1.5rem;
+        }
+
+        .word-chip {
+            font-family: 'Amiri', serif;
+            font-size: 1.65rem;
+            background: white;
+            border: 1px solid var(--primary);
+            color: var(--primary-dark);
+            padding: 0.35rem 1.1rem;
+            border-radius: 0.6rem;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.15s;
+        }
+
+        .word-chip:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .word-chip.in-answer {
+            background: var(--primary);
+            color: white;
+        }
+
+        .game-actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.65rem 1.5rem;
+            border-radius: 0.6rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .game-feedback {
+            margin-top: 1rem;
+            font-weight: 700;
+            font-size: 1rem;
+            min-height: 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 860px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+            .sidebar {
+                display: none;
+                position: static;
+                max-height: none;
+            }
+            .sidebar.show {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div>
+        <h1>Bahasa Arab Matsaga</h1>
+        <p>Media Pembelajaran Interaktif MTs Kelas VII, VIII &amp; IX</p>
+    </div>
+    <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Buka Menu">☰ Menu Bab</button>
+</header>
+
+<div class="container">
+    <aside class="sidebar" id="sidebar"></aside>
+    <main class="main-content" id="main-content"></main>
+</div>
+
+<script>
+const dataKelas7 = [
+    {
+        id: "k7-b1",
+        kelas: "KELAS VII",
+        judulArab: "التَّعَارُفُ",
+        judulLatin: "At-Ta'aruf (Perkenalan)",
+        kosakata: [
+            { arab: "اسْمٌ", latin: "Ismun", arti: "Nama", kategori: "Umum" },
+            { arab: "صَدِيقٌ", latin: "Ṣadiqun", arti: "Teman (Laki-laki)", kategori: "Umum" },
+            { arab: "صَدِيقَةٌ", latin: "Ṣadiqatun", arti: "Teman (Perempuan)", kategori: "Umum" },
+            { arab: "طَالِبٌ", latin: "Ṭalibun", arti: "Siswa", kategori: "Profesi" },
+            { arab: "طَالِبَةٌ", latin: "Ṭalibatun", arti: "Siswi", kategori: "Profesi" },
+            { arab: "أُسْتَاذٌ", latin: "Ustāzun", arti: "Guru (Laki-laki)", kategori: "Profesi" },
+            { arab: "أُسْتَاذَةٌ", latin: "Ustázatun", arti: "Guru (Perempuan)", kategori: "Profesi" },
+            { arab: "مَدْرَسَةٌ", latin: "Madrasatun", arti: "Sekolah", kategori: "Tempat" },
+            { arab: "فَصْلٌ", latin: "Faṣlun", arti: "Kelas", kategori: "Tempat" },
+            { arab: "بَيْتٌ", latin: "Baytun", arti: "Rumah", kategori: "Tempat" },
+            { arab: "عُنْوَانٌ", latin: "'Unwānun", arti: "Alamat", kategori: "Atribut" },
+            { arab: "رَقْمٌ", latin: "Raqmun", arti: "Nomor", kategori: "Atribut" },
+            { arab: "هَاتِفٌ", latin: "Hatifun", arti: "Telepon", kategori: "Atribut" },
+            { arab: "سَلَامٌ", latin: "Salāmun", arti: "Keselamatan / Salam", kategori: "Sapaan" },
+            { arab: "صَبَاحٌ", latin: "Ṣabāḥun", arti: "Pagi", kategori: "Waktu" }
+        ],
+        hiwar: [
+            { pembicara: "Ahmad", arab: "السَّلَامُ عَلَيْكُمْ", indo: "Assalamu'alaikum" },
+            { pembicara: "Hasan", arab: "وَعَلَيْكُمُ السَّلَامُ وَرَحْمَةُ اللهِ", indo: "Wa'alaikumussalam warahmatullah" },
+            { pembicara: "Ahmad", arab: "كَيْفَ حَالُكَ يَا أَخِي؟", indo: "Bagaimana kabarmu wahai saudaraku?" },
+            { pembicara: "Hasan", arab: "أَنَا بِخَيْرٍ، وَالْحَمْدُ لِلَّهِ. وَكَيْفَ حَالُكَ أَنْتَ؟", indo: "Aku baik-baik saja, alhamdulillah. Dan bagaimana kabarmu?" },
+            { pembicara: "Ahmad", arab: "أَنَا بِخَيْرٍ أَيْضًا. مَا اسْمُكَ؟", indo: "Aku baik juga. Siapa namamu?" },
+            { pembicara: "Hasan", arab: "اسْمِي حَسَنٌ، وَمَا اسْمُكَ يَا أَخِي؟", indo: "Namaku Hasan, dan siapa namamu wahai saudaraku?" },
+            { pembicara: "Ahmad", arab: "اسْمِي أَحْمَدُ. مِنْ أَيْنَ أَنْتَ؟", indo: "Namaku Ahmad. Dari mana kamu berasal?" },
+            { pembicara: "Hasan", arab: "أَنَا مِنْ مَدِينَةِ جَاكَرْتَا، وَأَنْتَ؟", indo: "Aku dari kota Jakarta, dan kamu?" },
+            { pembicara: "Ahmad", arab: "أَنَا مِنْ مَدِينَةِ بَنْدُونْجَ. أَيْنَ عُنْوَانُ بَيْتِكَ؟", indo: "Aku dari kota Bandung. Di mana alamat rumahmu?" },
+            { pembicara: "Hasan", arab: "عُنْوَانُ بَيْتِي فِي شَارِعِ مِيرْدِيكَا رَقْمُ عَشَرَةٍ", indo: "Alamat rumahku di Jalan Merdeka nomor 10" }
+        ],
+        bacaan: [
+            { arab: "هَذَا صَدِيقِي، اسْمُهُ أَحْمَدُ.", indo: "Ini adalah temanku, namanya Ahmad." },
+            { arab: "هُوَ طَالِبٌ نَشِيطٌ فِي الْمَدْرَسَةِ الْمُتَوَسِّطَةِ الْإِسْلَامِيَّةِ.", indo: "Ia adalah siswa yang rajin di MTs." },
+            { arab: "يَسْكُنُ أَحْمَدُ فِي شَارِعِ سُودِرْمَانِ رَقْمُ خَمْسَةَ عَشَرَ.", indo: "Ahmad tinggal di Jalan Sudirman nomor 15." },
+            { arab: "وَهَذِهِ صَدِيقَتِي، اسْمُهَا فَاطِمَةُ.", indo: "Dan ini adalah teman perempuanku, namanya Fatimah." },
+            { arab: "هِيَ طَالِبَةٌ ذَكِيَّةٌ وَتَتَعَلَّمُ فِي نَفْسِ الْمَدْرَسَةِ.", indo: "Ia adalah siswi yang cerdas dan belajar di sekolah yang sama." },
+            { arab: "أَحْمَدُ وَفَاطِمَةُ يَتَعَلَّمَانِ اللُّغَةَ الْعَرَبِيَّةَ بِجِدٍّ.", indo: "Ahmad dan Fatimah belajar Bahasa Arab dengan bersungguh-sungguh." },
+            { arab: "اللُّغَةُ الْعَرَبِيَّةُ لُغَةٌ جَمِيلَةٌ وَسَهْلَةٌ لِلتَّعَلُّمِ.", indo: "Bahasa Arab adalah bahasa yang indah dan mudah untuk dipelajari." },
+            { arab: "كُلُّ يَوْمٍ يَقْرَءُونَ الْكُتُبَ الْعَرَبِيَّةَ فِي الْمَكْتَبَةِ.", indo: "Setiap hari mereka membaca buku-buku Bahasa Arab di perpustakaan." },
+            { arab: "الْأُسْتَاذُ يُسَاعِدُهُمْ فِي فَهْمِ الدُّرُوسِ الصَّعْبَةِ.", indo: "Pak Guru membantu mereka dalam memahami pelajaran yang sulit." },
+            { arab: "هُمْ سُعَدَاءُ جِدًّا بِدِرَاسَةِ اللُّغَةِ الْعَرَبِيَّةِ فِي الْمَدْرَسَةِ.", indo: "Mereka sangat senang belajar Bahasa Arab di sekolah." }
+        ],
+        latihan: [
+            { pertanyaan: "Apa arti dari kata 'Ismun' (اسْمٌ)?", opsi: ["Nama", "Rumah", "Sekolah", "Jalan"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan ke Bahasa Arab: 'Teman (Laki-laki)'", opsi: ["Ṭalibun", "Ṣadiqun", "Ustazun", "Baytun"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Madrasatun' (مَدْرَسَةٌ)?", opsi: ["Kelas", "Rumah", "Sekolah", "Alamat"], jawaban: 2 },
+            { pertanyaan: "Lengkapi kalimat berikut: أَنَا ... مِنْ جَاكَرْتَا", opsi: ["مِنْ", "فِي", "عَلَى", "وَ"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Thalibun' (طَالِبٌ)?", opsi: ["Guru", "Siswa", "Teman", "Kepala Sekolah"], jawaban: 1 },
+            { pertanyaan: "Bagaimana cara mengucapkan 'Selamat Pagi' dalam Bahasa Arab?", opsi: ["Masa'an khair", "Sabahal khair", "Ma'as salam", "Ahlan wa sahlan"], jawaban: 1 },
+            { pertanyaan: "Apa arti kata 'Raqmun' (رَقْمٌ)?", opsi: ["Nomor", "Jalan", "Kota", "Telepon"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Alamat' ke dalam Bahasa Arab:", opsi: ["Syari'un", "Madinatun", "'Unwānun", "Hatifun"], jawaban: 2 },
+            { pertanyaan: "Manakah yang merupakan kosakata profesi?", opsi: ["Baytun", "Ustazun", "Raqmun", "Syari'un"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Faṣlun' (فَصْلٌ)?", opsi: ["Kelas", "Rumah", "Pintu", "Jendela"], jawaban: 0 },
+            { pertanyaan: "Lengkapi percakapan: مَا اسْمُكَ؟ ... أَحْمَدُ", opsi: ["اسْمِي", "أَنَا", "هَذَا", "ذَلِكَ"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Hatifun' (هَاتِفٌ)?", opsi: ["Buku", "Telepon", "Pena", "Papan tulis"], jawaban: 1 },
+            { pertanyaan: "Manakah kata ganti untuk perempuan (Muannats)?", opsi: ["Ṣadiqun", "Ṭalibun", "Ṣadiqatun", "Ustazun"], jawaban: 2 },
+            { pertanyaan: "Apa terjemahan bahasa Indonesia dari 'Ṣabāḥan'?", opsi: ["Pagi hari", "Siang hari", "Sore hari", "Malam hari"], jawaban: 0 },
+            { pertanyaan: "Bagaimana jawaban untuk salam 'Assalamu'alaikum'?", opsi: ["Sabahannur", "Wa'alaikumussalam", "Ahlan bik", "Ma'as salam"], jawaban: 1 }
+        ],
+        game: [
+            { kata: ["هَذَا", "صَدِيقِي", "أَحْمَدُ"], arti: "Ini adalah temanku Ahmad" },
+            { kata: ["أَنَا", "مِنْ", "مَدِينَةِ", "جَاكَرْتَا"], arti: "Aku dari kota Jakarta" },
+            { kata: ["مَا", "اسْمُكَ", "يَا", "أَخِي"], arti: "Siapa namamu wahai saudaraku" },
+            { kata: ["اسْمِي", "حَسَنٌ", "وَأَنَا", "طَالِبٌ"], arti: "Namaku Hasan dan aku seorang siswa" },
+            { kata: ["عُنْوَانُ", "بَيْتِي", "فِي", "شَارِعِ", "مِيرْدِيكَا"], arti: "Alamat rumahku di Jalan Merdeka" },
+            { kata: ["هِيَ", "طَالِبَةٌ", "ذَكِيَّةٌ", "فِي", "الْمَدْرَسَةِ"], arti: "Dia adalah siswi yang cerdas di sekolah" },
+            { kata: ["الأُسْتَاذُ", "يُسَاعِدُ", "الطُّلَّابَ", "فِي", "الْفَصْلِ"], arti: "Pak guru membantu para siswa di kelas" },
+            { kata: ["نَحْنُ", "نَتَعَلَّمُ", "اللُّغَةَ", "الْعَرَبِيَّةَ"], arti: "Kami belajar Bahasa Arab" },
+            { kata: ["ذَلِكَ", "أُسْتَاذٌ", "نَشِيطٌ", "جِدًّا"], arti: "Itu adalah guru yang sangat rajin" },
+            { kata: ["صَبَاحَ", "الْخَيْرِ", "يَا", "أَصْدِقَائِي"], arti: "Selamat pagi wahai teman-temanku" }
+        ]
+    },
+    {
+        id: "k7-b2",
+        kelas: "KELAS VII",
+        judulArab: "الْمَرَافِقُ الْمَدْرَسِيَّةُ",
+        judulLatin: "Al-Marafiq Al-Madrasiyyah (Fasilitas Sekolah)",
+        kosakata: [
+            { arab: "مَكْتَبَةٌ", latin: "Maktabatun", arti: "Perpustakaan", kategori: "Fasilitas" },
+            { arab: "مَسْجِدٌ", latin: "Masjidun", arti: "Masjid", kategori: "Fasilitas" },
+            { arab: "فِسْحَةٌ", latin: "Fisḥatun", arti: "Kantin / Istirahat", kategori: "Fasilitas" },
+            { arab: "مَعْمَلٌ", latin: "Ma'malun", arti: "Laboratorium", kategori: "Fasilitas" },
+            { arab: "مَلْعَبٌ", latin: "Mal'abun", arti: "Lapangan", kategori: "Fasilitas" },
+            { arab: "حَمَّامٌ", latin: "Ḥammamun", arti: "Kamar Mandi / Toilet", kategori: "Fasilitas" },
+            { arab: "إِدَارَةٌ", latin: "Idaratun", arti: "Kantor / Tata Usaha", kategori: "Fasilitas" },
+            { arab: "فَصْلٌ", latin: "Faṣlun", arti: "Kelas", kategori: "Ruangan" },
+            { arab: "بَوَّابَةٌ", latin: "Bawwabatun", arti: "Gerbang", kategori: "Lingkungan" },
+            { arab: "سُورٌ", latin: "Surun", arti: "Pagar", kategori: "Lingkungan" },
+            { arab: "حَدِيقَةٌ", latin: "Hadiqatun", arti: "Kebun / Taman", kategori: "Lingkungan" },
+            { arab: "قَاعَةٌ", latin: "Qa'atun", arti: "Aula", kategori: "Ruangan" },
+            { arab: "مَرْسَمٌ", latin: "Marsamun", arti: "Ruang Seni", kategori: "Ruangan" },
+            { arab: "نَافِذَةٌ", latin: "Nafidzatun", arti: "Jendela", kategori: "Bangunan" },
+            { arab: "بَابٌ", latin: "Babun", arti: "Pintu", kategori: "Bangunan" }
+        ],
+        hiwar: [
+            { pembicara: "Farid", arab: "يَا فَيْصَلُ، أَيْنَ الْمَكْتَبَةُ فِي هَذِهِ الْمَدْرَسَةِ؟", indo: "Wahai Faisal, di mana perpustakaan di sekolah ini?" },
+            { pembicara: "Faisal", arab: "الْمَكْتَبَةُ بَوَابَةَ الْفَصْلِ، وَرَاءَ الْمَسْجِدِ.", indo: "Perpustakaan dekat kelas, di belakang masjid." },
+            { pembicara: "Farid", arab: "وَأَيْنَ الْمَلْعَبُ؟ هَلْ هُوَ وَاسِعٌ؟", indo: "Dan di mana lapangan? Apakah itu luas?" },
+            { pembicara: "Faisal", arab: "نَعَمْ، الْمَلْعَبُ وَاسِعٌ أَمَامَ الإِدَارَةِ.", indo: "Ya, lapangan itu luas di depan kantor." },
+            { pembicara: "Farid", arab: "أَيْنَ يُصَلِّي الطُّلَّابُ الظُّهْرَ؟", indo: "Di mana para siswa shalat zuhur?" },
+            { pembicara: "Faisal", arab: "يُصَلِّي الطُّلَّابُ فِي الْمَسْجِدِ الْكَبِيرِ.", indo: "Para siswa shalat di masjid yang besar." },
+            { pembicara: "Farid", arab: "وَأَيْنَ نَشْتَرِي الطَّعَامَ فِي وَقْتِ الاِسْتِرَاحَةِ؟", indo: "Dan di waktu istirahat di mana kita membeli makanan?" },
+            { pembicara: "Faisal", arab: "نَشْتَرِي الطَّعَامَ مِنَ الْفِسْحَةِ (الْكَانْتِين).", indo: "Kita membeli makanan dari kantin." },
+            { pembicara: "Farid", arab: "هَلْ هُنَاكَ مَعْمَلٌ لِلْعُلُومِ؟", indo: "Apakah di sini ada laboratorium sains?" },
+            { pembicara: "Faisal", arab: "نَعَمْ، الْمَعْمَلُ جَانِبَ حَدِيقَةِ الْمَدْرَسَةِ.", indo: "Ya, laboratorium di samping kebun sekolah." }
+        ],
+        bacaan: [
+            { arab: "هَذِهِ مَدْرَسَتِي، مَدْرَسَةٌ مُتَوَسِّطَةٌ إِسْلَامِيَّةٌ نَظِيفَةٌ.", indo: "Ini adalah sekolahku, sebuah MTs yang bersih." },
+            { arab: "فِي مَدْرَسَتِي مَرَافِقُ كَثِيرَةٌ لِلطُّلَّابِ وَالْمُعَلِّمِينَ.", indo: "Di sekolahku terdapat banyak fasilitas untuk siswa dan guru." },
+            { arab: "أَمَامَ الْمَدْرَسَةِ حَدِيقَةٌ جَمِيلَةٌ فِيهَا أَزْهَارٌ مُتَنَوِّعَةٌ.", indo: "Di depan sekolah ada taman yang indah berisi berbagai macam bunga." },
+            { arab: "الْمَكْتَبَةُ كَبِيرَةٌ، يَقْرَءُ فِيهَا الطُّلَّابُ الْكُتُبَ النَّافِعَةَ.", indo: "Perpustakaan itu besar, para siswa membaca buku-buku bermanfaat di dalamnya." },
+            { arab: "وَالْمَسْجِدُ نَظِيفٌ وَجَمِيلٌ لِصَلَاةِ الْجَمَاعَةِ.", indo: "Dan masjidnya bersih dan indah untuk shalat berjamaah." },
+            { arab: "يَلْعَبُ الطُّلَّابُ كُرَةَ الْقَدَمِ فِي الْمَلْعَبِ الْوَاسِعِ.", indo: "Para siswa bermain sepak bola di lapangan yang luas." },
+            { arab: "وَالمَعْمَلُ مُجَهَّزٌ بِالْأَدَوَاتِ الْعِلْمِيَّةِ الحَدِيثَةِ.", indo: "Dan laboratorium dilengkapi dengan alat-alat ilmiah modern." },
+            { arab: "هُنَاكَ أَيْضًا حَمَّامَاتٌ نَظِيفَةٌ لِلطُّلَّابِ وَالطَّالِبَاتِ.", indo: "Di sana juga terdapat kamar mandi yang bersih untuk siswa dan siswi." },
+            { arab: "نَحْنُ نُحِبُّ مَدْرَسَتَنَا كَثِيرًا لِأَنَّهَا جَمِيلَةٌ وَمُنَظَّمَةٌ.", indo: "Kami sangat mencintai sekolah kami karena indah dan tertata." },
+            { arab: "كُلُّ يَوْمٍ نَحْنُ نَحَافِظُ عَلَى نَظَافَةِ هَذِهِ الْمَرَافِقِ.", indo: "Setiap hari kami menjaga kebersihan fasilitas-fasilitas ini." }
+        ],
+        latihan: [
+            { pertanyaan: "Apa arti dari 'Maktabatun' (مَكْتَبَةٌ)?", opsi: ["Masjid", "Perpustakaan", "Kantin", "Laboratorium"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Masjid' ke dalam Bahasa Arab:", opsi: ["Mal'abun", "Masjidun", "Hammamun", "Idaratun"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Mal'abun' (مَلْعَبٌ)?", opsi: ["Lapangan", "Kelas", "Kantor", "Taman"], jawaban: 0 },
+            { pertanyaan: "Di mana letak perpustakaan berdasarkan hiwar?", opsi: ["Di depan kantor", "Di belakang masjid", "Di samping gerbang", "Di dalam kelas"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Fisḥatun' (فِسْحَةٌ)?", opsi: ["Laboratorium", "Kantin/Istirahat", "Aula", "Kamar mandi"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Kamar Mandi' ke Bahasa Arab:", opsi: ["Hammamun", "Surun", "Babun", "Nafidzatun"], jawaban: 0 },
+            { pertanyaan: "Apa arti kata 'Hadiqatun' (حَدِيقَةٌ)?", opsi: ["Pagar", "Taman/Kebun", "Jendela", "Pintu"], jawaban: 1 },
+            { pertanyaan: "Manakah yang merupakan fasilitas sekolah?", opsi: ["Tabibun", "Maktabatun", "Kitabun", "Qalamun"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Idaratun' (إِدَارَةٌ)?", opsi: ["Kantor / Tata Usaha", "Perpustakaan", "Masjid", "Lapangan"], jawaban: 0 },
+            { pertanyaan: "Di mana siswa bermain sepak bola?", opsi: ["Fil mal'ab", "Fil masjid", "Fil maktabah", "Fil idarah"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Surun' (سُورٌ)?", opsi: ["Pagar", "Pintu", "Jendela", "Gerbang"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Laboratorium' ke Bahasa Arab:", opsi: ["Ma'malun", "Qa'atun", "Marsamun", "Faṣlun"], jawaban: 0 },
+            { pertanyaan: "Apa arti kata 'Bawwabatun' (بَوَّابَةٌ)?", opsi: ["Pagar", "Gerbang", "Jendela", "Pintu"], jawaban: 1 },
+            { pertanyaan: "Mana kalimat yang benar untuk 'Taman di depan sekolah'?", opsi: ["Al-hadiqu amamal madrasah", "Al-mal'abu wara'al fasl", "Al-masjidu janibal maktabah", "Al-ma'malu fi bayti"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Nafidzatun' (نَافِذَةٌ)?", opsi: ["Pintu", "Jendela", "Atap", "Lantai"], jawaban: 1 }
+        ],
+        game: [
+            { kata: ["الْمَكْتَبَةُ", "وَاسِعَةٌ", "وَرَاءَ", "الْمَسْجِدِ"], arti: "Perpustakaan itu luas di belakang masjid" },
+            { kata: ["يَلْعَبُ", "الطُّلَّابُ", "فِي", "الْمَلْعَبِ"], arti: "Para siswa bermain di lapangan" },
+            { kata: ["هَذِهِ", "حَدِيقَةٌ", "جَمِيلَةٌ", "أَمَامَ", "الْمَدْرَسَةِ"], arti: "Ini adalah taman yang indah di depan sekolah" },
+            { kata: ["نَحْنُ", "نُصَلِّي", "الظُّهْرَ", "فِي", "الْمَسْجِدِ"], arti: "Kami shalat zuhur di masjid" },
+            { kata: ["الْمَعْمَلُ", "نَظِيفٌ", "جِدًّا", "هُنَاكَ"], arti: "Laboratorium itu sangat bersih di sana" },
+            { kata: ["أَيْنَ", "حَمَّامُ", "الْمَدْرَسَةِ", "يَا", "صَدِيقِي"], arti: "Di mana kamar mandi sekolah wahai temanku" },
+            { kata: ["الْفِسْحَةُ", "جَانِبَ", "الْإِدَارَةِ", "الْكَبِيرَةِ"], arti: "Kantin berada di samping kantor besar" },
+            { kata: ["يَقْرَأُ", "الطَّالِبُ", "الْكِتَابَ", "فِي", "الْمَكْتَبَةِ"], arti: "Siswa membaca buku di perpustakaan" },
+            { kata: ["سُورُ", "المَدْرَسَةِ", "عَالٍ", "وَقَوِيٌّ"], arti: "Pagar sekolah tinggi dan kuat" },
+            { kata: ["البَوَّابَةُ", "مَفْتُوحَةٌ", "لِلطُّلَّابِ", "صَبَاحًا"], arti: "Gerbang terbuka untuk para siswa di pagi hari" }
+        ]
+    },
+    {
+        id: "k7-b3",
+        kelas: "KELAS VII",
+        judulArab: "أَدَوَاتُ الْمَدْرَسَةِ وَاللَّوْنُ",
+        judulLatin: "Al-Adawat Al-Madrasiyyah wal Laun (Peralatan Sekolah & Warna)",
+        kosakata: [
+            { arab: "قَلَمٌ", latin: "Qalamun", arti: "Pena / Pulpen", kategori: "Alat Sekolah" },
+            { arab: "كِتَابٌ", latin: "Kitābun", arti: "Buku", kategori: "Alat Sekolah" },
+            { arab: "قِرْطَاسٌ", latin: "Qirṭasun", arti: "Kertas", kategori: "Alat Sekolah" },
+            { arab: "مِسْطَرَةٌ", latin: "Misṭaratun", arti: "Penggaris", kategori: "Alat Sekolah" },
+            { arab: "مِمْحَاةٌ", latin: "Mimḥatun", arti: "Penghapus", kategori: "Alat Sekolah" },
+            { arab: "مِحْفَظَةٌ", latin: "Miḥfaẓatun", arti: "Tas Sekolah", kategori: "Alat Sekolah" },
+            { arab: "دَفْتَرٌ", latin: "Daftarun", arti: "Buku Catatan", kategori: "Alat Sekolah" },
+            { arab: "مِقْلَمَةٌ", latin: "Miqlamatun", arti: "Kotak Pensil", kategori: "Alat Sekolah" },
+            { arab: "أَحْمَرُ", latin: "Aḥmaru", arti: "Merah", kategori: "Warna" },
+            { arab: "أَزْرَقُ", latin: "Azraqu", arti: "Biru", kategori: "Warna" },
+            { arab: "أَخْضَرُ", latin: "Akhḍaru", arti: "Hijau", kategori: "Warna" },
+            { arab: "أَصْفَرُ", latin: "Aṣfaru", arti: "Kuning", kategori: "Warna" },
+            { arab: "أَسْوَدُ", latin: "Aswadu", arti: "Hitam", kategori: "Warna" },
+            { arab: "أَبْيَضُ", latin: "Abyadhu", arti: "Putih", kategori: "Warna" },
+            { arab: "بُرْتُقَالِيٌّ", latin: "Burtuqaliyyun", arti: "Oranye", kategori: "Warna" }
+        ],
+        hiwar: [
+            { pembicara: "Zaid", arab: "يَا حَنِيفُ، مَاذَا فِي مِحْفَظَتِكَ؟", indo: "Wahai Hanif, apa yang ada di dalam tasmu?" },
+            { pembicara: "Hanif", arab: "فِي مِحْفَظَتِي كِتَابٌ وَدَفْتَرٌ وَقَلَمٌ.", indo: "Di dalam tas-ku ada buku, buku catatan, dan pulpen." },
+            { pembicara: "Zaid", arab: "مَا لَوْنُ مِحْفَظَتِكَ؟", indo: "Apa warna tasmu?" },
+            { pembicara: "Hanif", arab: "مِحْفَظَتِي لَوْنُهَا أَزْرَقُ.", indo: "Warna tas-ku adalah biru." },
+            { pembicara: "Zaid", arab: "وَهَلْ هَذَا الْقَلَمُ لَهُ لَوْنُ أَسْوَدُ؟", indo: "Dan apakah pulpen ini berwarna hitam?" },
+            { pembicara: "Hanif", arab: "لَا، هَذَا الْقَلَمُ لَوْنُهُ أَحْمَرُ.", indo: "Bukan, pulpen ini berwarna merah." },
+            { pembicara: "Zaid", arab: "أَيْنَ مِمْحَاتُكَ وَمِسْطَرَتُكَ؟", indo: "Di mana penghapus dan penggarismu?" },
+            { pembicara: "Hanif", arab: "مِمْحَاتِي بَيْضَاءُ وَمِسْطَرَتِي خَضْرَاءُ فِي مِقْلَمَتِي.", indo: "Penghapusku berwarna putih dan penggarisku hijau di dalam kotak pensil." },
+            { pembicara: "Zaid", arab: "كَمْ قَلَمًا فِي مِقْلَمَتِكَ؟", indo: "Berapa pulpen di dalam kotak pensilmu?" },
+            { pembicara: "Hanif", arab: "فِي مِقْلَمَتِي ثَلَاثَةُ أَقْلَامٍ.", indo: "Di dalam kotak pensilku ada tiga pulpen." }
+        ],
+        bacaan: [
+            { arab: "هَذِهِ مِحْفَظَةُ طَالِبٍ نَشِيطٍ فِي الْمَدْرَسَةِ.", indo: "Ini adalah tas seorang siswa yang rajin di sekolah." },
+            { arab: "فِي الْمِحْفَظَةِ أَدَوَاتٌ مَدْرَسِيَّةٌ مُتَنَوِّعَةٌ وَجَمِيلَةٌ.", indo: "Di dalam tas terdapat peralatan sekolah yang beragam dan indah." },
+            { arab: "هُنَاكَ كِتَابُ اللُّغَةِ الْعَرَبِيَّةِ لَوْنُهُ أَخْضَرُ.", indo: "Di sana ada buku Bahasa Arab yang warnanya hijau." },
+            { arab: "وَكِتَابُ الرِّيَاضِيَّاتِ لَوْنُهُ أَزْرَقُ زَاهِي.", indo: "Dan buku matematika warnanya biru cerah." },
+            { arab: "وَالدَّفْتَرُ لَوْنُهُ أَبْيَضُ لِلْكِتَابَةِ وَالتَّدْرِيبَاتِ.", indo: "Dan buku catatan warnanya putih untuk menulis dan latihan." },
+            { arab: "وَالْقَلَمُ لَوْنُهُ أَسْوَدُ لِكِتَابَةِ الدُّرُوسِ وَالْجُمَلِ.", indo: "Dan pulpen warnanya hitam untuk menulis pelajaran dan kalimat." },
+            { arab: "وَفِي مِقْلَمَةِ الطَّالِبِ مِمْحَاةٌ صَغِيرَةٌ بَيْضَاءُ.", indo: "Dan di dalam kotak pensil siswa terdapat penghapus kecil berwarna putih." },
+            { arab: "وَمِسْطَرَةٌ طَوِيلَةٌ لَوْنُهَا أَصْفَرُ جَمِيلٌ.", indo: "Serta penggaris panjang yang warnanya kuning indah." },
+            { arab: "كُلُّ هَذِهِ الْأَدَوَاتِ مُرَتَّبَةٌ بِنِظَامٍ فِي الْمِحْفَظَةِ.", indo: "Semua peralatan ini tersusun rapi di dalam tas." },
+            { arab: "الطَّالبُ يَحْفَظُ أَدَوَاتَهُ الْمَدْرَسِيَّةَ دَائِمًا.", indo: "Siswa tersebut selalu menjaga peralatan sekolahnya." }
+        ],
+        latihan: [
+            { pertanyaan: "Apa arti dari 'Qalamun' (قَلَمٌ)?", opsi: ["Buku", "Pulpen / Pena", "Penggaris", "Penghapus"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Buku' ke Bahasa Arab:", opsi: ["Kitābun", "Daftarun", "Qirṭasun", "Miḥfaẓatun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Miḥfaẓatun' (مِحْفَظَةٌ)?", opsi: ["Kotak pensil", "Tas sekolah", "Penggaris", "Buku catatan"], jawaban: 1 },
+            { pertanyaan: "Apa warna 'Aḥmaru' (أَحْمَرُ)?", opsi: ["Biru", "Merah", "Hijau", "Kuning"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Hijau' ke dalam Bahasa Arab:", opsi: ["Aṣfaru", "Azraqu", "Akhḍaru", "Aswadu"], jawaban: 2 },
+            { pertanyaan: "Apa arti dari 'Misṭaratun' (مِسْطَرَةٌ)?", opsi: ["Penghapus", "Penggaris", "Pulpen", "Kertas"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Mimḥatun' (مِمْحَاةٌ)?", opsi: ["Penghapus", "Tas", "Buku", "Kotak pensil"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Hitam' ke Bahasa Arab:", opsi: ["Abyadhu", "Aswadu", "Aḥmaru", "Burtuqaliyyun"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Daftarun' (دَفْتَرٌ)?", opsi: ["Buku catatan", "Buku teks", "Kertas", "Pena"], jawaban: 0 },
+            { pertanyaan: "Bagaimana mengatakan 'Tas biru' dalam Bahasa Arab?", opsi: ["Miḥfazatun azraqu", "Miḥfazatun azraqatu", "Al-miḥfazatu azraqu", "Al-miḥfazatu zaroqa'"], jawaban: 3 },
+            { pertanyaan: "Apa arti dari 'Miqlamatun' (مِقْلَمَةٌ)?", opsi: ["Kotak pensil", "Tas", "Penggaris", "Buku"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Kuning' ke Bahasa Arab:", opsi: ["Aṣfaru", "Akhḍaru", "Azraqu", "Aswadu"], jawaban: 0 },
+            { pertanyaan: "Apa warna 'Abyadhu' (أَبْيَضُ)?", opsi: ["Putih", "Hitam", "Merah", "Kuning"], jawaban: 0 },
+            { pertanyaan: "Manakah yang merupakan kosakata warna?", opsi: ["Kitabun", "Aḥmaru", "Misṭaratun", "Mimḥatun"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Qirṭasun' (قِرْطَاسٌ)?", opsi: ["Kertas", "Pena", "Buku", "Tas"], jawaban: 0 }
+        ],
+        game: [
+            { kata: ["فِي", "مِحْفَظَتِي", "كِتَابٌ", "وَقَلَمٌ"], arti: "Di dalam tas-ku ada buku dan pulpen" },
+            { kata: ["لَوْنُ", "الْكِتَابِ", "أَخْضَرُ", "جَمِيلٌ"], arti: "Warna buku itu hijau indah" },
+            { kata: ["المِمْحَاةُ", "بَيْضَاءُ", "وَالْمِسْطَرَةُ", "صَفْرَاءُ"], arti: "Penghapus berwarna putih dan penggaris berwarna kuning" },
+            { kata: ["فِي", "مِقْلَمَتِي", "ثَلَاثَةُ", "أَقْلَامٍ"], arti: "Di dalam kotak pensilku ada tiga pulpen" },
+            { kata: ["هَذَا", "الدَّفْتَرُ", "أَبْيَضُ", "لِلْكِتَابَةِ"], arti: "Buku catatan ini putih untuk menulis" },
+            { kata: ["الْقَلَمُ", "الْأَسْوَدُ", "عَلَى", "الْمَكْتَبِ"], arti: "Pulpen hitam itu di atas meja" },
+            { kata: ["أَيْنَ", "مِحْفَظَتُكَ", "الْجَدِيدَةُ", "يَا", "صَدِيقِي"], arti: "Di mana tas barumu wahai temanku" },
+            { kata: ["تِلْكَ", "مِسْطَرَةٌ", "طَوِيلَةٌ", "جِدًّا"], arti: "Itu adalah penggaris yang sangat panjang" },
+            { kata: ["اشْتَرَيْتُ", "قَلَمًا", "أَحْمَرَ", "جَدِيدًا"], arti: "Aku membeli pulpen merah yang baru" },
+            { kata: ["كُلُّ", "الْأَدَوَاتِ", "مُرَتَّبَةٌ", "فِي", "الْمِحْفَظَةِ"], arti: "Semua peralatan tersusun rapi di dalam tas" }
+        ]
+    }
+];
+
+const dataKelas8 = [
+    {
+        id: "k8-b1",
+        kelas: "KELAS VIII",
+        judulArab: "الْعُنْوَانُ وَالسَّاعَةُ",
+        judulLatin: "Al-'Unwan was Sa'ah (Alamat & Jam)",
+        kosakata: [
+            { arab: "عُنْوَانٌ", latin: "'Unwanun", arti: "Alamat", kategori: "Alamat" },
+            { arab: "شَارِعٌ", latin: "Syari'un", arti: "Jalan", kategori: "Alamat" },
+            { arab: "رَقْمٌ", latin: "Raqmun", arti: "Nomor", kategori: "Alamat" },
+            { arab: "بَيْتٌ", latin: "Baytun", arti: "Rumah", kategori: "Alamat" },
+            { arab: "مَدِينَةٌ", latin: "Madinatun", arti: "Kota", kategori: "Alamat" },
+            { arab: "قَرْيَةٌ", latin: "Qaryatun", arti: "Desa", kategori: "Alamat" },
+            { arab: "مَسْكَنٌ", latin: "Maskanun", arti: "Tempat tinggal", kategori: "Alamat" },
+            { arab: "سَاعَةٌ", latin: "Sa'atun", arti: "Jam / Waktu", kategori: "Waktu" },
+            { arab: "دَقِيقَةٌ", latin: "Daqiqatun", arti: "Menit", kategori: "Waktu" },
+            { arab: "ثَانِيَةٌ", latin: "Saniyatun", arti: "Detik", kategori: "Waktu" },
+            { arab: "رُبْعٌ", latin: "Rub'un", arti: "Seperempat (15 menit)", kategori: "Waktu" },
+            { arab: "نِصْفٌ", latin: "Nisfun", arti: "Setengah (30 menit)", kategori: "Waktu" },
+            { arab: "وَقْتٌ", latin: "Waqtun", arti: "Waktu", kategori: "Waktu" },
+            { arab: "الْآنَ", latin: "Al-ana", arti: "Sekarang", kategori: "Waktu" },
+            { arab: "مُبَكِّرًا", latin: "Mubakkiran", arti: "Pagi-pagi / Lebih awal", kategori: "Waktu" }
+        ],
+        hiwar: [
+            { pembicara: "Farhan", arab: "يَا حَسَنُ، فِي أَيِّ سَاعَةٍ تَذْهَبُ إِلَى الْمَدْرَسَةِ؟", indo: "Wahai Hasan, jam berapa kamu pergi ke sekolah?" },
+            { pembicara: "Hasan", arab: "أَذْهَبُ إِلَى الْمَدْرَسَةِ فِي السَّاعَةِ السَّادِسَةِ وَالنِّصْفِ صَبَاحًا.", indo: "Aku pergi ke sekolah pada pukul 06.30 pagi." },
+            { pembicara: "Farhan", arab: "وَكَمِ السَّاعَةُ الْآنَ؟", indo: "Dan jam berapa sekarang?" },
+            { pembicara: "Hasan", arab: "السَّاعَةُ الْآنَ السَّابِعَةُ إِلَّا رُبْعًا.", indo: "Sekarang pukul 06.45 (tujuh kurang seperempat)." },
+            { pembicara: "Farhan", arab: "أَيْنَ بَيْتُكَ يَا حَسَنُ؟", indo: "Di mana rumahmu wahai Hasan?" },
+            { pembicara: "Hasan", arab: "بَيْتِي فِي شَارِعِ مَعَارِفِ رَقْمُ ثَمَانِيَةٍ.", indo: "Rumahku di Jalan Ma'arif nomor 8." },
+            { pembicara: "Farhan", arab: "هَلْ بَيْتُكَ قَرِيبٌ مِنَ الْمَدْرَسَةِ؟", indo: "Apakah rumahmu dekat dari sekolah?" },
+            { pembicara: "Hasan", arab: "نَعَمْ، بَيْتِي قَرِيبٌ جِدًّا، أَمْشِي عَلَى الْأَقْدَامِ.", indo: "Ya, rumahku sangat dekat, aku berjalan kaki." },
+            { pembicara: "Farhan", arab: "كَمْ رَقْمُ هَاتِفِكَ؟", indo: "Berapa nomor teleponmu?" },
+            { pembicara: "Hasan", arab: "رَقْمُ هَاتِفِي: 08123456789", indo: "Nomor teleponku: 08123456789" }
+        ],
+        bacaan: [
+            { arab: "هَذَا يَوْمِيَّاتِي فِي الْمَدْرَسَةِ وَالْبَيْتِ.", indo: "Ini adalah keseharianku di sekolah dan rumah." },
+            { arab: "أَسْتَيْقِظُ مِنَ النَّوْمِ فِي السَّاعَةِ الرَّابِعَةِ وَالنِّصْفِ صَبَاحًا.", indo: "Aku bangun tidur pada pukul 04.30 pagi." },
+            { arab: "أُصَلِّي الصُّبْحَ حَاضِرًا فِي الْمَسْجِدِ مَعَ الْجَمَاعَةِ.", indo: "Aku shalat subuh tepat waktu di masjid secara berjamaah." },
+            { arab: "بَعْدَ الصَّلَاةِ، أَتَنَاوَلُ الْفُطُورَ مَعَ أُسْرَتِي فِي غُرْفَةِ الطَّعَامِ.", indo: "Setelah shalat, aku sarapan bersama keluargaku di ruang makan." },
+            { arab: "فِي السَّاعَةِ السَّادِسَةِ وَالنِّصْفِ، أَرْكَبُ الدَّرَّاجَةَ إِلَى الْمَدْرَسَةِ.", indo: "Pada pukul 06.30, aku naik sepeda ke sekolah." },
+            { arab: "عُنْوَانُ مَدْرَسَتِي فِي شَارِعِ سُودِرْمَانِ رَقْمُ عَشَرَةٍ.", indo: "Alamat sekolahku di Jalan Sudirman nomor 10." },
+            { arab: "تَبْدَأُ الدِّرَاسَةُ فِي السَّاعَةِ السَّابِعَةِ تَمَامًا.", indo: "Pelajaran dimulai pada pukul 07.00 pas." },
+            { arab: "نَدْرُسُ اللُّغَةَ الْعَرَبِيَّةَ وَالرِّيَاضِيَّاتِ وَعُلُومَ الدِّينِ.", indo: "Kami belajar bahasa Arab, matematika, dan ilmu agama." },
+            { arab: "نَرْجِعُ مِنَ الْمَدْرَسَةِ فِي السَّاعَةِ الثَّانِيَةِ ظُهْرًا.", indo: "Kami pulang dari sekolah pada pukul 02.00 siang." },
+            { arab: "أَنَا تِلْمِيذٌ مُجْتَهِدٌ أُحِبُّ تَنْظِيمَ الْوَقْتِ دَائِمًا.", indo: "Aku adalah siswa teladan yang selalu suka mengatur waktu." }
+        ],
+        latihan: [
+            { pertanyaan: "Apa arti dari 'Al-'Unwan' (الْعُنْوَانُ)?", opsi: ["Jam", "Alamat", "Jalan", "Rumah"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Jam' ke dalam Bahasa Arab:", opsi: ["Sa'atun", "Daqiqatun", "Waqtun", "Raqmun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Daqiqatun' (دَقِيقَةٌ)?", opsi: ["Detik", "Menit", "Jam", "Waktu"], jawaban: 1 },
+            { pertanyaan: "Bagaimana mengatakan 'Pukul 06.30' dalam bahasa Arab?", opsi: ["As-sa'atus sadisatu", "As-sa'atus sadisatu wan-nisfu", "As-sa'atus sab'atu", "As-sa'atul khamisatu"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Syari'un' (شَارِعٌ)?", opsi: ["Kota", "Desa", "Jalan", "Nomor"], jawaban: 2 },
+            { pertanyaan: "Terjemahkan 'Seperempat (15 menit)' ke Bahasa Arab:", opsi: ["Nisful", "Rub'un", "Daqiqatun", "Saniyatun"], jawaban: 1 },
+            { pertanyaan: "Di mana alamat rumah Hasan dalam hiwar?", opsi: ["Jalan Sudirman", "Jalan Ma'arif", "Jalan Merdeka", "Jalan Melati"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Mubakkiran' (مُبَكِّرًا)?", opsi: ["Terlambat", "Pagi-pagi / Lebih awal", "Malam", "Siang"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Nomor' ke bahasa Arab:", opsi: ["Raqmun", "Unwanun", "Syari'un", "Baytun"], jawaban: 0 },
+            { pertanyaan: "Pukul berapa pelajaran sekolah dimulai?", opsi: ["Jam 06.30", "Jam 07.00", "Jam 08.00", "Jam 02.00"], jawaban: 1 },
+            { pertanyaan: "Apa arti kata 'Al-ana' (الْآنَ)?", opsi: ["Kemarin", "Besok", "Sekarang", "Nanti"], jawaban: 2 },
+            { pertanyaan: "Terjemahkan 'Desa' ke dalam Bahasa Arab:", opsi: ["Madinatun", "Qaryatun", "Baytun", "Syari'un"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Waqtun' (وَقْتٌ)?", opsi: ["Waktu", "Jalan", "Rumah", "Nomor"], jawaban: 0 },
+            { pertanyaan: "Kapan siswa pulang dari sekolah?", opsi: ["Jam 07.00 pagi", "Jam 12.00 siang", "Jam 02.00 siang", "Jam 05.00 sore"], jawaban: 2 },
+            { pertanyaan: "Bagaimana menanyakan jam dalam bahasa Arab?", opsi: ["Kamis sa'atu?", "Ayna baytuka?", "Ma ismuka?", "Min ayna anta?"], jawaban: 0 }
+        ],
+        game: [
+            { kata: ["أَذْهَبُ", "إِلَى", "الْمَدْرَسَةِ", "صَبَاحًا"], arti: "Aku pergi ke sekolah di pagi hari" },
+            { kata: ["السَّاعَةُ", "الآنَ", "السَّابِعَةُ", "تَمَامًا"], arti: "Sekarang pukul tujuh pas" },
+            { kata: ["عُنْوَانُ", "بَيْتِي", "فِي", "شَارِعِ", "مَعَارِفِ"], arti: "Alamat rumahku di Jalan Ma'arif" },
+            { kata: ["أَسْتَيْقِظُ", "مِنَ", "النَّوْمِ", "مُبَكِّرًا"], arti: "Aku bangun tidur lebih awal" },
+            { kata: ["نَرْجِعُ", "مِنَ", "الْمَدْرَسَةِ", "ظُهْرًا"], arti: "Kami pulang dari sekolah pada siang hari" },
+            { kata: ["أُصَلِّي", "الصُّبْحَ", "فِي", "الْمَسْجِدِ"], arti: "Aku shalat subuh di masjid" },
+            { kata: ["كَمْ", "رَقْمُ", "هَاتِفِكَ", "يَا", "أَخِي"], arti: "Berapa nomor teleponmu wahai saudaraku" },
+            { kata: ["الْبَيْتُ", "قَرِيبٌ", "جِدًّا", "مِنَ", "الْمَدْرَسَةِ"], arti: "Rumah itu sangat dekat dari sekolah" },
+            { kata: ["نَحْنُ", "نُحِبُّ", "تَنْظِيمَ", "الْوَقْتِ"], arti: "Kami suka mengatur waktu" },
+            { kata: ["التِّلْمِيذُ", "يُبَكِّرُ", "فِي", "الذَّهَابِ"], arti: "Siswa itu berangkat lebih awal" }
+        ]
+    },
+    {
+        id: "k8-b2",
+        kelas: "KELAS VIII",
+        judulArab: "يَوْمِيَّتُنَا",
+        judulLatin: "Yaumiyyatuna (Keseharian Kita)",
+        kosakata: [
+            { arab: "يَوْمِيَّةٌ", latin: "Yawmiyyatun", arti: "Aktivitas harian", kategori: "Aktivitas" },
+            { arab: "اسْتَيْقَظَ", latin: "Istayqazha", arti: "Bangun tidur", kategori: "Aktivitas" },
+            { arab: "تَوَضَّأَ", latin: "Tawadha'a", arti: "Berwudhu", kategori: "Aktivitas" },
+            { arab: "صَلَّى", latin: "Sallaa", arti: "Shalat", kategori: "Aktivitas" },
+            { arab: "قَرَأَ", latin: "Qara'a", arti: "Membaca", kategori: "Aktivitas" },
+            { arab: "كَتَبَ", latin: "Kataba", arti: "Menulis", kategori: "Aktivitas" },
+            { arab: "ذَهَبَ", latin: "Zahaba", arti: "Pergi", kategori: "Aktivitas" },
+            { arab: "رَجَعَ", latin: "Raja'a", arti: "Pulang / Kembali", kategori: "Aktivitas" },
+            { arab: "طَبَخَ", latin: "Tabakha", arti: "Memasak", kategori: "Aktivitas" },
+            { arab: "نَظَّفَ", latin: "Nazhafa", arti: "Membersihkan", kategori: "Aktivitas" },
+            { arab: "غَسَلَ", latin: "Ghasala", arti: "Mencuci", kategori: "Aktivitas" },
+            { arab: "نَامَ", latin: "Naama", arti: "Tidur", kategori: "Aktivitas" },
+            { arab: "لَعِبَ", latin: "La'iba", arti: "Bermain", kategori: "Aktivitas" },
+            { arab: "سَاعَدَ", latin: "Sa'ada", arti: "Membantu", kategori: "Aktivitas" },
+            { arab: "رَاحَةٌ", latin: "Rahatun", arti: "Istirahat", kategori: "Aktivitas" }
+        ],
+        hiwar: [
+            { pembicara: "Aisyah", arab: "يَا فَاطِمَةُ، مَاذَا تَفْعَلِينَ بَعْدَ الصُّبْحِ؟", indo: "Wahai Fatimah, apa yang kamu lakukan setelah Subuh?" },
+            { pembicara: "Fatimah", arab: "أَقْرَأُ الْقُرْآنَ الْكَرِيمَ ثُمَّ أُنَظِّفُ غُرْفَتِي.", indo: "Aku membaca Al-Qur'an kemudian membersihkan kamarku." },
+            { pembicara: "Aisyah", arab: "وَهَلْ تُسَاعِدِينَ أُمَّكِ فِي المَطْبَخِ؟", indo: "Dan apakah kamu membantu ibumu di dapur?" },
+            { pembicara: "Fatimah", arab: "نَعَمْ، أُسَاعِدُ أُمِّي فِي طَبْخِ الْفُطُورِ وَغَسْلِ الأَوَانِي.", indo: "Ya, aku membantu ibuku memasak sarapan dan mencuci piring." },
+            { pembicara: "Aisyah", arab: "مَتَى تَذْهَبِينَ إِلَى الْمَدْرَسَةِ؟", indo: "Kapan kamu pergi ke sekolah?" },
+            { pembicara: "Fatimah", arab: "أَذْهَبُ إِلَى الْمَدْرَسَةِ فِي السَّاعَةِ السَّادِسَةِ وَالنِّصْفِ.", indo: "Aku pergi ke sekolah pada pukul 06.30." },
+            { pembicara: "Aisyah", arab: "وَمَاذَا تَفْعَلِينَ فِي الْمَسَاءِ؟", indo: "Dan apa yang kamu lakukan di sore hari?" },
+            { pembicara: "Fatimah", arab: "فِي الْمَسَاءِ أُرَاجِعُ دُرُوسِي وَأُصَلِّي المَغْرِبَ.", indo: "Di sore hari aku mengulang pelajaranku dan shalat Maghrib." },
+            { pembicara: "Aisyah", arab: "فِي أَيِّ سَاعَةٍ تَنَامِينَ لَيْلًا؟", indo: "Jam berapa kamu tidur di malam hari?" },
+            { pembicara: "Fatimah", arab: "أَنَامُ فِي السَّاعَةِ التَّاسِعَةِ لَيْلًا.", indo: "Aku tidur pada pukul 09.00 malam." }
+        ],
+        bacaan: [
+            { arab: "هَذِهِ يَوْمِيَّاتِي الْمُنَظَّمَةُ كُلَّ يَوْمٍ.", indo: "Ini adalah aktivitas harianku yang teratur setiap hari." },
+            { arab: "أَسْتَيْقِظُ مِنَ النَّوْمِ مُبَكِّرًا قَبْلَ صَلَاةِ الصُّبْحِ.", indo: "Aku bangun tidur lebih awal sebelum shalat subuh." },
+            { arab: "أَتَوَضَّأُ ثُمَّ أُصَلِّي الصُّبْحَ حَاضِرًا فِي الْمَسْجِدِ.", indo: "Aku berwudhu kemudian shalat subuh tepat waktu di masjid." },
+            { arab: "بَعْدَ الصَّلَاةِ، أَقْرَأُ بَعْضَ الآيَاتِ مِنَ القُرْآنِ.", indo: "Setelah shalat, aku membaca beberapa ayat dari Al-Qur'an." },
+            { arab: "أُسَاعِدُ أَبِي وَأُمِّي فِي تَنْظِيفِ البَيْتِ وَتَرْتِيبِهِ.", indo: "Aku membantu ayah dan ibuku membersihkan dan merapikan rumah." },
+            { arab: "فِي السَّاعَةِ السَّادِسَةِ وَالنِّصْفِ، أَتَجَهَّزُ لِلذَّهَابِ إِلَى المَدْرَسَةِ.", indo: "Pada pukul 06.30, aku bersiap untuk pergi ke sekolah." },
+            { arab: "أَدْرُسُ فِي المَدْرَسَةِ بِجِدٍّ وَنَشَاطٍ طَوَالَ اليَوْمِ.", indo: "Aku belajar di sekolah dengan bersungguh-sungguh dan rajin sepanjang hari." },
+            { arab: "أَرْجِعُ إِلَى البَيْتِ ظُهْرًا فَأَتَنَاوَلُ الغَدَاءَ وَأَسْتَرِيحُ قَلِيلًا.", indo: "Aku pulang ke rumah siang hari lalu makan siang dan beristirahat sebentar." },
+            { arab: "فِي المَسَاءِ، أُذَاكِرُ دُرُوسِي وَأَحُلُّ التَّمْرِينَاتِ.", indo: "Di sore hari, aku mengulang pelajaranku dan mengerjakan latihan." },
+            { arab: "أَنَا أَعْمَلُ بِهَذَا النِّظَامِ لِأَنَّ الوَقْتَ ثَمِينٌ جِدًّا.", indo: "Aku menjalani rutinitas ini karena waktu sangatlah berharga." }
+        ],
+        latihan: [
+            { pertanyaan: "Apa arti dari 'Yawmiyyatun' (يَوْمِيَّةٌ)?", opsi: ["Aktivitas harian", "Mingguan", "Bulanan", "Tahunan"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Bangun tidur' ke Bahasa Arab:", opsi: ["Naama", "Istayqazha", "Zahaba", "Qara'a"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Tawadha'a' (تَوَضَّأَ)?", opsi: ["Mandi", "Berwudhu", "Shalat", "Tidur"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Membaca' ke Bahasa Arab:", opsi: ["Kataba", "Qara'a", "Tabakha", "Ghasala"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Tabakha' (طَبَخَ)?", opsi: ["Memasak", "Mencuci", "Membersihkan", "Membantu"], jawaban: 0 },
+            { pertanyaan: "Apa yang dilakukan Fatimah setelah Subuh dalam hiwar?", opsi: ["Tidur kembali", "Membaca Al-Qur'an dan membersihkan kamar", "Pergi ke pasar", "Bermain bola"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Tidur' ke bahasa Arab:", opsi: ["Naama", "Zahaba", "Raja'a", "La'iba"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Nazhafa' (نَظَّفَ)?", opsi: ["Mencuci", "Membersihkan", "Memasak", "Membantu"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Membantu' ke bahasa Arab:", opsi: ["Sa'ada", "La'iba", "Kataba", "Qara'a"], jawaban: 0 },
+            { pertanyaan: "Pukul berapa Fatimah tidur di malam hari?", opsi: ["Jam 08.00", "Jam 09.00", "Jam 10.00", "Jam 11.00"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Ghasala' (غَسَلَ)?", opsi: ["Mencuci", "Memasak", "Membaca", "Menulis"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Pulang' ke bahasa Arab:", opsi: ["Zahaba", "Raja'a", "Naama", "Sallaa"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Rahatun' (رَاحَةٌ)?", opsi: ["Istirahat", "Kerja", "Belajar", "Bermain"], jawaban: 0 },
+            { pertanyaan: "Kapan siswa mengulang pelajarannya?", opsi: ["Pagi hari", "Siang hari", "Sore hari", "Tengah malam"], jawaban: 2 },
+            { pertanyaan: "Mengapa kita harus mengatur waktu menurut bacaan?", opsi: ["Karena waktu berharga", "Karena lelah", "Karena diperintah guru", "Karena hari libur"], jawaban: 0 }
+        ],
+        game: [
+            { kata: ["أَسْتَيْقِظُ", "مِنَ", "النَّوْمِ", "مُبَكِّرًا"], arti: "Aku bangun tidur lebih awal" },
+            { kata: ["أَتَوَضَّأُ", "ثُمَّ", "أُصَلِّي", "الصُّبْحَ"], arti: "Aku berwudhu kemudian shalat subuh" },
+            { kata: ["أُسَاعِدُ", "أُمِّي", "فِي", "الْمَطْبَخِ"], arti: "Aku membantu ibuku di dapur" },
+            { kata: ["أَقْرَأُ", "الْقُرْآنَ", "بَعْدَ", "الصَّلَاةِ"], arti: "Aku membaca Al-Qur'an setelah shalat" },
+            { kata: ["أَرْجِعُ", "إِلَى", "الْبَيْتِ", "ظُهْرًا"], arti: "Aku pulang ke rumah pada siang hari" },
+            { kata: ["أُنَظِّفُ", "غُرْفَتِي", "كُلَّ", "يَوْمٍ"], arti: "Aku membersihkan kamarku setiap hari" },
+            { kata: ["أُذَاكِرُ", "دُرُوسِي", "فِي", "الْمَسَاءِ"], arti: "Aku mengulang pelajaranku di sore hari" },
+            { kata: ["أَنَامُ", "فِي", "السَّاعَةِ", "التَّاسِعَةِ"], arti: "Aku tidur pada pukul sembilan" },
+            { kata: ["الطَّالِبُ", "يَكْتُبُ", "الدَّرْسَ", "بِجِدٍّ"], arti: "Siswa menulis pelajaran dengan bersungguh-sungguh" },
+            { kata: ["الوَقْتُ", "ثَمِينٌ", "جِدًّا", "لِلْإِنْسَانِ"], arti: "Waktu sangatlah berharga bagi manusia" }
+        ]
+    },
+    {
+        id: "k8-b3",
+        kelas: "KELAS VIII",
+        judulArab: "حَيَاةُ الْأُسْرَةِ",
+        judulLatin: "Hayatul Usrah (Kehidupan Keluarga)",
+        kosakata: [
+            { arab: "أُسْرَةٌ", latin: "Usratun", arti: "Keluarga", kategori: "Keluarga" },
+            { arab: "أَبٌ", latin: "Abun", arti: "Ayah", kategori: "Keluarga" },
+            { arab: "أُمٌّ", latin: "Ummu", arti: "Ibu", kategori: "Keluarga" },
+            { arab: "أَخٌ", latin: "Akhun", arti: "Saudara laki-laki", kategori: "Keluarga" },
+            { arab: "أُخْتٌ", latin: "Ukhtun", arti: "Saudara perempuan", kategori: "Keluarga" },
+            { arab: "جَدٌّ", latin: "Jaddun", arti: "Kakek", kategori: "Keluarga" },
+            { arab: "جَدَّةٌ", latin: "Jaddatun", arti: "Nenek", kategori: "Keluarga" },
+            { arab: "عَمٌّ", latin: "Ammu", arti: "Paman", kategori: "Keluarga" },
+            { arab: "عَمَّةٌ", latin: "Ammatun", arti: "Bibi", kategori: "Keluarga" },
+            { arab: "وَلَدٌ", latin: "Waladun", arti: "Anak laki-laki", kategori: "Keluarga" },
+            { arab: "بِنْتٌ", latin: "Bintun", arti: "Anak perempuan", kategori: "Keluarga" },
+            { arab: "بَيْتٌ", latin: "Baytun", arti: "Rumah", kategori: "Rumah" },
+            { arab: "غُرْفَةٌ", latin: "Ghurfatun", arti: "Ruangan", kategori: "Rumah" },
+            { arab: "عَائِلَةٌ", latin: "'A'ilatun", arti: "Sanak famili", kategori: "Keluarga" },
+            { arab: "سَعَادَةٌ", latin: "Sa'adatun", arti: "Kebahagiaan", kategori: "Sifat" }
+        ],
+        hiwar: [
+            { pembicara: "Rasyid", arab: "هَذِهِ صُورَةُ أُسْرَتِي، يَا خَالِدُ.", indo: "Ini adalah foto keluargaku, wahai Khalid." },
+            { pembicara: "Khalid", arab: "مَا شَاءَ اللهُ، أُسْرَةٌ جَمِيلَةٌ. مَنْ هَذَا الرَّجُلُ الكَبِيرُ؟", indo: "Masya Allah, keluarga yang indah. Siapa laki-laki tua ini?" },
+            { pembicara: "Rasyid", arab: "هَذَا جَدِّي، وَهَذِهِ جَدَّتِي.", indo: "Ini adalah kakekku, dan ini nenekku." },
+            { pembicara: "Khalid", arab: "وَمَنْ هَذَا الرَّجُلُ وَهَذِهِ المَرْأَةُ؟", indo: "Dan siapa laki-laki ini dan wanita ini?" },
+            { pembicara: "Rasyid", arab: "هَذَا أَبِي وَهَذِهِ أُمِّي.", indo: "Ini ayahku dan ini ibuku." },
+            { pembicara: "Khalid", arab: "هَلْ لَكَ إِخْوَةٌ وأَخَوَاتٌ؟", indo: "Apakah kamu memiliki saudara laki-laki dan perempuan?" },
+            { pembicara: "Rasyid", arab: "نَعَمْ، لِي أَخٌ وَاحِدٌ وَأُخْتٌ وَاحِدَةٌ.", indo: "Ya, aku punya satu saudara laki-laki dan satu saudara perempuan." },
+            { pembicara: "Khalid", arab: "مَا اسْمُ أَخِيكَ؟", indo: "Siapa nama saudara laki-lakimu?" },
+            { pembicara: "Rasyid", arab: "اسْمُهُ أَحْمَدُ، وَهُوَ طَالِبٌ فِي المَدْرَسَةِ الثَّانَوِيَّةِ.", indo: "Namanya Ahmad, dia siswa di sekolah menengah." },
+            { pembicara: "Khalid", arab: "حَفِظَ اللهُ أُسْرَتَكَ المُبَارَكَةَ.", indo: "Semoga Allah menjaga keluargamu yang diberkahi." }
+        ],
+        bacaan: [
+            { arab: "أَنَا أَعِيشُ فِي أُسْرَةٍ سَعِيدَةٍ وَمُتَحَابَّةٍ.", indo: "Aku hidup dalam keluarga yang bahagia dan saling mencintai." },
+            { arab: "تَتَكَوَّنُ أُسْرَتِي مِنَ الأَبِ وَالأُمِّ وَالأَخَوَيْنِ وَالأَخَوَاتِ.", indo: "Keluargaku terdiri dari ayah, ibu, dua saudara laki-laki, dan dua saudara perempuan." },
+            { arab: "أَبِي يَعْمَلُ مُهَنْدِسًا مَاهِرًا، وَأُمِّي تَعْمَلُ طَبِيبَةً نَاجِحَةً.", indo: "Ayahku bekerja sebagai insinyur yang mahir, dan ibuku bekerja sebagai dokter yang sukses." },
+            { arab: "نَسْتَيْقِظُ جَمِيعًا فِي الصَّبَاحِ لِأَدَاءِ الصَّلَاةِ وَالاسْتِعْدَادِ لليَوْمِ.", indo: "Kami bangun bersama di pagi hari untuk menunaikan shalat dan bersiap untuk hari baru." },
+            { arab: "فِي المَسَاءِ، نَجْتَمِعُ فِي غُرْفَةِ الجُلُوسِ لِتَنَاوُلِ الشَّايِ.", indo: "Di sore hari, kami berkumpul di ruang tamu untuk menikmati teh." },
+            { arab: "يَتَحَدَّثُ الأَبُ عَنْ عَمَلِهِ وَتُسَاعِدُ الأُمُّ الأَوْلَادَ فِي الدُّرُوسِ.", indo: "Ayah berbicara tentang pekerjaannya dan ibu membantu anak-anak dalam pelajaran." },
+            { arab: "جَدِّي وَجَدَّتِي يَسْكُنَانِ مَعَنَا فِي نَفْسِ البَيْتِ الكَبِيرِ.", indo: "Kakek dan nenekku tinggal bersama kami di rumah besar yang sama." },
+            { arab: "نَحْنُ نَحْتَرِمُ الكَبِيرَ وَنَرْحَمُ الصَّغِيرَ فِي العَائِلَةِ.", indo: "Kami menghormati yang lebih tua dan menyayangi yang lebih muda di dalam keluarga." },
+            { arab: "الحَيَاةُ الأُسْرِيَّةُ مَلِيئَةٌ بِالمَوَدَّةِ وَالرَّحْمَةِ وَالسَّلَامِ.", indo: "Kehidupan keluarga penuh dengan kecintaan, kasih sayang, dan kedamaian." },
+            { arab: "أَنَا أَحْمَدُ اللهَ تَعَالَى عَلَى هَذِهِ النِّعْمَةِ العَظِيمَةِ.", indo: "Aku memuji Allah Ta'ala atas nikmat yang sangat besar ini." }
+        ],
+        latihan: [
+            { pertanyaan: "Apa arti dari 'Usratun' (أُسْرَةٌ)?", opsi: ["Sekolah", "Keluarga", "Rumah", "Teman"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Ayah' ke Bahasa Arab:", opsi: ["Ummu", "Abun", "Akhun", "Ammu"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Ummu' (أُمٌّ)?", opsi: ["Ibu", "Nenek", "Bibi", "Saudari"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Kakek' ke Bahasa Arab:", opsi: ["Jaddun", "Ammu", "Abun", "Akhun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Jaddatun' (جَدَّةٌ)?", opsi: ["Bibi", "Nenek", "Ibu", "Saudari"], jawaban: 1 },
+            { pertanyaan: "Siapa yang bekerja sebagai insinyur dalam bacaan?", opsi: ["Ayah", "Kakek", "Paman", "Saudara"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Paman' ke bahasa Arab:", opsi: ["Ammu", "Jaddun", "Akhun", "Abun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Ukhtun' (أُخْتٌ)?", opsi: ["Saudara laki-laki", "Saudara perempuan", "Ibu", "Bibi"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Rumah' ke bahasa Arab:", opsi: ["Baytun", "Madrasatun", "Masjidun", "Maktabatun"], jawaban: 0 },
+            { pertanyaan: "Di mana keluarga berkumpul di sore hari?", opsi: ["Di dapur", "Di ruang tamu", "Di lapangan", "Di kelas"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Waladun' (وَلَدٌ)?", opsi: ["Anak laki-laki", "Anak perempuan", "Ayah", "Kakek"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Anak perempuan' ke bahasa Arab:", opsi: ["Bintun", "Ukhtun", "Ummu", "Jaddatun"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Sa'adatun' (سَعَادَةٌ)?", opsi: ["Kesedihan", "Kebahagiaan", "Keluarga", "Rumah"], jawaban: 1 },
+            { pertanyaan: "Siapa yang bekerja sebagai dokter dalam bacaan?", opsi: ["Ibu", "Nenek", "Bibi", "Saudari"], jawaban: 0 },
+            { pertanyaan: "Bagaimana sikap kita terhadap orang yang lebih tua?", opsi: ["Menghormati", "Memarahi", "Membenci", "Menjauhi"], jawaban: 0 }
+        ],
+        game: [
+            { kata: ["هَذِهِ", "صُورَةُ", "أُسْرَتِي", "السَّعِيدَةِ"], arti: "Ini adalah foto keluargaku yang bahagia" },
+            { kata: ["أَبِي", "يَعْمَلُ", "مُهَنْدِسًا", "مَاهِرًا"], arti: "Ayahku bekerja sebagai insinyur yang mahir" },
+            { kata: ["أُمِّي", "تَعْمَلُ", "طَبِيبَةً", "نَاجِحَةً"], arti: "Ibuku bekerja sebagai dokter yang sukses" },
+            { kata: ["جَدِّي", "وَجَدَّتِي", "يَسْكُنَانِ", "مَعَنَا"], arti: "Kakek dan nenekku tinggal bersama kami" },
+            { kata: ["لِي", "أَخٌ", "وَاحِدٌ", "وَأُخْتٌ"], arti: "Aku memiliki satu saudara laki-laki dan satu saudari" },
+            { kata: ["نَجْتَمِعُ", "فِي", "غُرْفَةِ", "الجُلُوسِ"], arti: "Kami berkumpul di ruang tamu" },
+            { kata: ["نَحْنُ", "نَحْتَرِمُ", "الكَبِيرَ", "فِي", "العَائِلَةِ"], arti: "Kami menghormati yang lebih tua di dalam keluarga" },
+            { kata: ["الحَيَاةُ", "الأُسْرِيَّةُ", "مَلِيئَةٌ", "بِالمَوَدَّةِ"], arti: "Kehidupan keluarga penuh dengan kecintaan" },
+            { kata: ["أُحِبُّ", "أَبِي", "وَأُمِّي", "كَثِيرًا"], arti: "Aku sangat mencintai ayah dan ibuku" },
+            { kata: ["الحَمْدُ", "للهِ", "عَلَى", "نِعْمَةِ", "الأُسْرَةِ"], arti: "Segala puji bagi Allah atas nikmat keluarga" }
+        ]
+    },
+    {
+        id: "k8-b4",
+        kelas: "KELAS VIII",
+        judulArab: "الْهِوَايَةُ",
+        judulLatin: "Al-Hiwayah (Hobi)",
+        kosakata: [
+            { arab: "هِوَايَةٌ", latin: "Hiwayatun", arti: "Hobi / Kegemaran", kategori: "Hobi" },
+            { arab: "قِرَاءَةٌ", latin: "Qira'atun", arti: "Membaca", kategori: "Hobi" },
+            { arab: "كِتَابَةٌ", latin: "Kitabatun", arti: "Menulis", kategori: "Hobi" },
+            { arab: "رُسُومٌ", latin: "Rusumun", arti: "Menggambar", kategori: "Hobi" },
+            { arab: "سِبَاحَةٌ", latin: "Sibahatun", arti: "Berenang", kategori: "Hobi" },
+            { arab: "رِيَاضَةٌ", latin: "Riyadhatun", arti: "Berolahraga", kategori: "Hobi" },
+            { arab: "سَفَرٌ", latin: "Safarun", arti: "Bepergian / Traveling", kategori: "Hobi" },
+            { arab: "تَصْوِيرٌ", latin: "Tashwirun", arti: "Fotografi", kategori: "Hobi" },
+            { arab: "زِرَاعَةٌ", latin: "Zira'atun", arti: "Berkebun", kategori: "Hobi" },
+            { arab: "طَبْخٌ", latin: "Tabkhun", arti: "Memasak", kategori: "Hobi" },
+            { arab: "طَابَعٌ", latin: "Tabi'un", arti: "Perangko", kategori: "Hobi" },
+            { arab: "كُرَةٌ", latin: "Kuratun", arti: "Bola", kategori: "Olahraga" },
+            { arab: "جَرْيٌ", latin: "Jaryun", arti: "Lari", kategori: "Olahraga" },
+            { arab: "دَرَّاجَةٌ", latin: "Darrajatun", arti: "Sepeda", kategori: "Olahraga" },
+            { arab: "مُمْتِعٌ", latin: "Mumti'un", arti: "Menyenangkan", kategori: "Sifat" }
+        ],
+        hiwar: [
+            { pembicara: "Tariq", arab: "مَا هِوَايَتُكَ يَا حَمْزَةُ؟", indo: "Apa hobimu wahai Hamzah?" },
+            { pembicara: "Hamzah", arab: "هِوَايَتِي قِرَاءَةُ الكُتُبِ وَرِيَاضَةُ السِّبَاحَةِ.", indo: "Hobiku adalah membaca buku dan olahraga berenang." },
+            { pembicara: "Tariq", arab: "أَيْنَ تَسْبَحُ؟", indo: "Di mana kamu berenang?" },
+            { pembicara: "Hamzah", arab: "أَسْبَحُ فِي المَسْبَحِ المَدْرَسِيِّ كُلَّ يَوْمِ أَحَدٍ.", indo: "Aku berenang di kolam renang sekolah setiap hari Ahad." },
+            { pembicara: "Tariq", arab: "وَهَلْ تُحِبُّ رِيَاضَةَ كُرَةِ القَدَمِ؟", indo: "Dan apakah kamu suka olahraga sepak bola?" },
+            { pembicara: "Hamzah", arab: "لَا، أُفَضِّلُ السِّبَاحَةَ وَرُسُومَ المَنَاظِرِ الطَّبِيعِيَّةِ.", indo: "Tidak, aku lebih menyukai berenang dan menggambar pemandangan alam." },
+            { pembicara: "Tariq", arab: "مَاذَا تَقْرَأُ مِنَ الكُتُبِ؟", indo: "Apa yang kamu baca dari buku-buku?" },
+            { pembicara: "Hamzah", arab: "أَقْرَأُ كُتُبَ التَّارِيخِ والقِصَصَ الإِسْلَامِيَّةَ المُفِيدَةَ.", indo: "Aku membaca buku-buku sejarah dan kisah-kisah Islam yang bermanfaat." },
+            { pembicara: "Tariq", arab: "الهِوَايَةُ المُفِيدَةُ تُمْتِعُ الوَقْتَ.", indo: "Hobi yang bermanfaat menyenangkan waktu." },
+            { pembicara: "Hamzah", arab: "صَحِيحٌ، الوَقْتُ كَالسَّيْفِ إِنْ لَمْ تَقْطَعْهُ قَطَعَكَ.", indo: "Benar, waktu bagaikan pedang, jika kamu tidak menebasnya, ia akan menebasmu." }
+        ],
+        bacaan: [
+            { arab: "كُلُّ إِنْسَانٍ لَهُ هِوَايَةٌ يُحِبُّهَا فِي وَقْتِ الفَرَاغِ.", indo: "Setiap manusia memiliki hobi yang ia sukai di waktu luang." },
+            { arab: "هِوَايَاتُ النَّاسِ مُتَنَوِّعَةٌ وَمُخْتَلِفَةٌ مِنْ شَخْصٍ لِآخَرَ.", indo: "Hobi manusia bermacam-macam dan berbeda dari satu orang ke orang lain." },
+            { arab: "بَعْضُ النَّاسِ يُحِبُّونَ قِرَاءَةَ الكُتُبِ وَالمَجَلَّاتِ العِلْمِيَّةِ.", indo: "Sebagian orang suka membaca buku dan majalah ilmiah." },
+            { arab: "وَالبَعْضُ الآخَرُ يُفَضِّلُونَ رِيَاضَةَ كُرَةِ القَدَمِ وَالسِّبَاحَةِ.", indo: "Dan sebagian yang lain lebih menyukai olahraga sepak bola dan berenang." },
+            { arab: "أَمَّا أَنَا فَهِوَايَتِي المُفَضَّلَةُ هِيَ رَسْمُ المَنَاظِرِ الطَّبِيعِيَّةِ.", indo: "Adapun aku, hobiku yang paling disukai adalah menggambar pemandangan alam." },
+            { arab: "أَنَا أَرْسُمُ الجِبَالَ وَالأَنْهَارَ وَالأَزْهَارَ الجَمِيلَةَ بِالأَلْوَانِ.", indo: "Aku menggambar gunung-gunung, sungai-sungai, dan bunga indah dengan warna-warni." },
+            { arab: "الهِوَايَةُ تُرَوِّحُ عَنِ النَّفْسِ بَعْدَ التَّعَبِ فِي الدِّرَاسَةِ.", indo: "Hobi merehatkan jiwa setelah lelah dalam belajar." },
+            { arab: "وَهِيَ تُسَاعِدُنَا عَلَى اسْتِغْلَالِ أَوْقَاتِ الفَرَاغِ بِفَائِدَةٍ.", indo: "Dan ia membantu kita memanfaatkan waktu luang dengan penuh manfaat." },
+            { arab: "يَنْبَغِي لَنَا أَنْ نُتْقِنَ هِوَايَاتِنَا لِتَكُونَ نَافِعَةً لَنَا.", indo: "Sepatutnya bagi kita menguasai hobi kita agar bermanfaat bagi kita." },
+            { arab: "الحَمْدُ للهِ الذِي أَنْعَمَ عَلَيْنَا بِالهِوَايَاتِ النَّافِعَةِ.", indo: "Segala puji bagi Allah yang telah menganugerahi kita hobi-hobi yang bermanfaat." }
+        ],
+        latihan: [
+            { pertanyaan: "Apa arti dari 'Hiwayatun' (هِوَايَةٌ)?", opsi: ["Pekerjaan", "Hobi / Kegemaran", "Sekolah", "Rumah"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Membaca' ke Bahasa Arab:", opsi: ["Kitabatun", "Qira'atun", "Rusumun", "Sibahatun"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Sibahatun' (سِبَاحَةٌ)?", opsi: ["Bersepeda", "Berenang", "Lari", "Menggambar"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Menggambar' ke Bahasa Arab:", opsi: ["Rusumun", "Tashwirun", "Safarun", "Tabkhun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Riyadhatun' (رِيَاضَةٌ)?", opsi: ["Olahraga", "Membaca", "Memasak", "Berkebun"], jawaban: 0 },
+            { pertanyaan: "Apa hobi Hamzah dalam hiwar?", opsi: ["Sepak bola dan lari", "Membaca dan berenang", "Memasak dan melukis", "Fotografi"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Bepergian' ke bahasa Arab:", opsi: ["Safarun", "Zira'atun", "Tabkhun", "Tashwirun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Tashwirun' (تَصْوِيرٌ)?", opsi: ["Fotografi", "Menggambar", "Menulis", "Membaca"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Berkebun' ke bahasa Arab:", opsi: ["Zira'atun", "Tabkhun", "Safarun", "Sibahatun"], jawaban: 0 },
+            { pertanyaan: "Di mana Hamzah berenang?", opsi: ["Di sungai", "Di kolam renang sekolah", "Di laut", "Di danau"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Mumti'un' (مُمْتِعٌ)?", opsi: ["Membosankan", "Menyenangkan", "Sulit", "Mudah"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Sepeda' ke bahasa Arab:", opsi: ["Darrajatun", "Kuratun", "Jaryun", "Safarun"], jawaban: 0 },
+            { pertanyaan: "Apa fungsi hobi menurut bacaan?", opsi: ["Melelahkan badan", "Merehatkan jiwa setelah belajar", "Membuang waktu", "Menambah beban"], jawaban: 1 },
+            { pertanyaan: "Apa hobi penulis dalam bacaan?", opsi: ["Berenang", "Menggambar pemandangan alam", "Sepak bola", "Membaca sejarah"], jawaban: 1 },
+            { pertanyaan: "Peribahasa Arab tentang waktu:", opsi: ["Al-waqtu kas-saifi", "As-sobaru ka-zahal", "Al-ilmu noorun", "Man jadda wajada"], jawaban: 0 }
+        ],
+        game: [
+            { kata: ["هِوَايَتِي", "المُفَضَّلَةُ", "قِرَاءَةُ", "الكُتُبِ"], arti: "Hobiku yang paling disukai adalah membaca buku" },
+            { kata: ["أُحِبُّ", "رِيَاضَةَ", "السِّبَاحَةِ", "كَثِيرًا"], arti: "Aku sangat menyukai olahraga berenang" },
+            { kata: ["هَذَا", "رَسْمُ", "المَنْظَرِ", "الطَّبِيعِيِّ"], arti: "Ini adalah lukisan pemandangan alam" },
+            { kata: ["أَسْبَحُ", "فِي", "المَسْبَحِ", "يَوْمَ", "الأَحَدِ"], arti: "Aku berenang di kolam renang pada hari Ahad" },
+            { kata: ["الهِوَايَةُ", "تُرَوِّحُ", "عَنِ", "النَّفْسِ"], arti: "Hobi merehatkan jiwa" },
+            { kata: ["أَقْرَأُ", "قِصَصَ", "التَّارِيخِ", "الإِسْلَامِيِّ"], arti: "Aku membaca kisah-kisah sejarah Islam" },
+            { kata: ["نَحْنُ", "نَسْتَغِلُّ", "أَوْقَاتَ", "الفَرَاغِ"], arti: "Kami memanfaatkan waktu-waktu luang" },
+            { kata: ["التَّصْوِيرُ", "هِوَايَةٌ", "جَمِيلَةٌ", "جِدًّا"], arti: "Fotografi adalah hobi yang sangat indah" },
+            { kata: ["الكِتَابُ", "خَيْرُ", "جَلِيسٍ", "فِي", "الزَّمَانِ"], arti: "Buku adalah sebaik-baik teman duduk di setiap zaman" },
+            { kata: ["الحَمْدُ", "للهِ", "عَلَى", "الهِوَايَاتِ", "النَّافِعَةِ"], arti: "Segala puji bagi Allah atas hobi-hobi yang bermanfaat" }
+        ]
+    },
+    {
+        id: "k8-b5",
+        kelas: "KELAS VIII",
+        judulArab: "الرِّيَاضَةُ",
+        judulLatin: "Ar-Riyadhah (Olahraga)",
+        kosakata: [
+            { arab: "رِيَاضَةٌ", latin: "Riyadhatun", arti: "Olahraga", kategori: "Olahraga" },
+            { arab: "كُرَةُ القَدَمِ", latin: "Kuratul Qadami", arti: "Sepak bola", kategori: "Olahraga" },
+            { arab: "كُرَةُ السَّلَّةِ", latin: "Kuratussallati", arti: "Bola basket", kategori: "Olahraga" },
+            { arab: "كُرَةُ الطَّائِرَةِ", latin: "Kuratur-ta'irati", arti: "Bola voli", kategori: "Olahraga" },
+            { arab: "جَرْيٌ", latin: "Jaryun", arti: "Lari / Atletik", kategori: "Olahraga" },
+            { arab: "سِبَاحَةٌ", latin: "Sibahatun", arti: "Berenang", kategori: "Olahraga" },
+            { arab: "جُمْبَازٌ", latin: "Jumbazun", arti: "Senam", kategori: "Olahraga" },
+            { arab: "مَلْعَبٌ", latin: "Mal'abun", arti: "Lapangan", kategori: "Tempat" },
+            { arab: "فَائِزٌ", latin: "Fa'izun", arti: "Pemenang", kategori: "Sifat" },
+            { arab: "خَاسِرٌ", latin: "Khasirun", arti: "Yang kalah", kategori: "Sifat" },
+            { arab: "قَوِيٌّ", latin: "Qawiyyun", arti: "Kuat", kategori: "Sifat" },
+            { arab: "صِحَّةٌ", latin: "Shihhatun", arti: "Kesehatan", kategori: "Kesehatan" },
+            { arab: "جِسْمٌ", latin: "Jismun", arti: "Badan / Tubuh", kategori: "Kesehatan" },
+            { arab: "نَشَاطٌ", latin: "Nashatun", arti: "Semangat / Aktivitas", kategori: "Sifat" },
+            { arab: "فَرِيقٌ", latin: "Fariqun", arti: "Tim / Regu", kategori: "Olahraga" }
+        ],
+        hiwar: [
+            { pembicara: "Kasim", arab: "يَا بِلَالُ، مَا هِيَ رِيَاضَتُكَ المُفَضَّلَةُ؟", indo: "Wahai Bilal, apa olahraga kesukaanmu?" },
+            { pembicara: "Bilal", arab: "رِيَاضَتِي المُفَضَّلَةُ كُرَةُ القَدَمِ، وَمَاذَا عَنْكَ؟", indo: "Olahraga kesukaanku adalah sepak bola, dan bagaimana denganmu?" },
+            { pembicara: "Kasim", arab: "أَنَا أُفَضِّلُ كُرَةَ السَّلَّةِ وَالجَرْيَ.", indo: "Aku lebih menyukai bola basket dan lari." },
+            { pembicara: "Bilal", arab: "أَيْنَ تَلْعَبُ كُرَةَ القَدَمِ؟", indo: "Di mana kamu bermain sepak bola?" },
+            { pembicara: "Kasim", arab: "أَلْعَبُ فِي مَلْعَبِ المَدْرَسَةِ مَعَ أَصْدِقَائِي.", indo: "Aku bermain di lapangan sekolah bersama teman-temanku." },
+            { pembicara: "Bilal", arab: "مَتَى تَلْعَبُونَ؟", indo: "Kapan kalian bermain?" },
+            { pembicara: "Kasim", arab: "نَلْعَبُ فِي يَوْمِ العُطْلَةِ، يَوْمَ السَّبْتِ صَبَاحًا.", indo: "Kami bermain di hari libur, yaitu hari Sabtu pagi." },
+            { pembicara: "Bilal", arab: "الرِّيَاضَةُ مُفِيدَةٌ لِصِحَّةِ الجِسْمِ.", indo: "Olahraga sangat bermanfaat bagi kesehatan tubuh." },
+            { pembicara: "Kasim", arab: "صَحِيحٌ، العَقْلُ السَّلِيمُ فِي الجِسْمِ السَّلِيمِ.", indo: "Benar, akal yang sehat terdapat pada badan yang sehat." },
+            { pembicara: "Bilal", arab: "نَعَمْ، لِنُدَاوِمْ عَلَى الرِّيَاضَةِ كُلَّ أُسْبُوعٍ.", indo: "Ya, mari kita rutinkan olahraga setiap pekan." }
+        ],
+        bacaan: [
+            { arab: "الرِّيَاضَةُ أَمْرٌ مُهِمٌّ وَضَرُورِيٌّ لِحَيَاةِ الإِنْسَانِ.", indo: "Olahraga adalah perkara yang penting dan niscaya bagi kehidupan manusia." },
+            { arab: "هِيَ تَقْوَى الجِسْمَ وَتَحْفَظُ الصِّحَّةَ مِنَ الأَمْرَاضِ.", indo: "Ia menguatkan badan dan menjaga kesehatan dari berbagai penyakit." },
+            { arab: "يُحِبُّ الشَّبَابُ أَنْوَاعًا مُخْتَلِفَةً مِنَ الرِّيَاضَاتِ النَّافِعَةِ.", indo: "Para pemuda menyukai berbagai jenis olahraga yang bermanfaat." },
+            { arab: "مِنْهَا كُرَةُ القَدَمِ، وَكُرَةُ السَّلَّةِ، وَكُرَةُ الطَّائِرَةِ.", indo: "Di antaranya sepak bola, bola basket, dan bola voli." },
+            { arab: "وَهُنَاكَ مَنْ يُفَضِّلُ الجَرْيَ وَالسِّبَاحَةَ وَرُكُوبَ الدَّرَّاجَاتِ.", indo: "Dan ada yang lebih menyukai lari, berenang, dan naik sepeda." },
+            { arab: "يَجْتَمِعُ التَّلَامِيذُ فِي المَلْعَبِ المَدْرَسِيِّ يَوْمَ الجُمُعَةِ.", indo: "Para siswa berkumpul di lapangan sekolah pada hari Jumat." },
+            { arab: "يَلْعَبُونَ بِرُوحٍ رِيَاضِيَّةٍ عَالِيَةٍ وَاحْتِرَامٍ مُتَبَادَلٍ.", indo: "Mereka bermain dengan jiwa sportifitas tinggi dan saling menghormati." },
+            { arab: "الفَرِيقُ الفَائِزُ يَفْرَحُ بِالْفَوْزِ وَالفَرِيقُ الخَاسِرُ يَتَعَلَّمُ.", indo: "Tim yang menang bergembira dengan kemenangan dan tim yang kalah belajar." },
+            { arab: "نَحْنُ نَعْلَمُ أَنَّ العَقْلَ السَّلِيمَ فِي الجِسْمِ السَّلِيمِ.", indo: "Kita tahu bahwa akal yang sehat terdapat pada badan yang sehat." },
+            { arab: "لِذَلِكَ نَحْنُ نُمَارِسُ الرِّيَاضَةَ بِانْتِظَامٍ وَاسْتِمْرَارٍ.", indo: "Oleh karena itu kita melakukan olahraga secara teratur dan terus-menerus." }
+        ],
+        latihan: [
+            { pertanyaan: "Apa arti dari 'Riyadhatun' (رِيَاضَةٌ)?", opsi: ["Pelajaran", "Olahraga", "Kesehatan", "Permainan"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Sepak bola' ke Bahasa Arab:", opsi: ["Kuratul qadami", "Kuratussallati", "Kuratur-ta'irati", "Sibahatun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Kuratussallati' (كُرَةُ السَّلَّةِ)?", opsi: ["Sepak bola", "Bola basket", "Bola voli", "Tenis meja"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Bola voli' ke Bahasa Arab:", opsi: ["Kuratul qadami", "Kuratussallati", "Kuratur-ta'irati", "Jaryun"], jawaban: 2 },
+            { pertanyaan: "Apa arti dari 'Mal'abun' (مَلْعَبٌ)?", opsi: ["Lapangan", "Kelas", "Masjid", "Rumah"], jawaban: 0 },
+            { pertanyaan: "Apa olahraga kesukaan Bilal dalam hiwar?", opsi: ["Bola basket", "Sepak bola", "Berenang", "Lari"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Pemenang' ke bahasa Arab:", opsi: ["Fa'izun", "Khasirun", "Qawiyyun", "Fariqun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Khasirun' (خَاسِرٌ)?", opsi: ["Pemenang", "Yang kalah", "Kuat", "Tim"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Kesehatan' ke bahasa Arab:", opsi: ["Shihhatun", "Jismun", "Nashatun", "Riyadhatun"], jawaban: 0 },
+            { pertanyaan: "Kapan para siswa bermain olahraga di sekolah dalam bacaan?", opsi: ["Hari Jumat", "Hari Ahad", "Hari Senin", "Setiap malam"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Qawiyyun' (قَوِيٌّ)?", opsi: ["Lemah", "Kuat", "Sehat", "Sakit"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Tim / Regu' ke bahasa Arab:", opsi: ["Fariqun", "Mal'abun", "Jismun", "Shihhatun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Jismun' (جِسْمٌ)?", opsi: ["Badan / Tubuh", "Akal", "Semangat", "Kesehatan"], jawaban: 0 },
+            { pertanyaan: "Semboyan terkenal tentang olahraga:", opsi: ["Al-aqlus salimu fil jismis salimi", "Man jadda wajada", "Al-ilmu noorun", "As-sobaru ka-zahal"], jawaban: 0 },
+            { pertanyaan: "Apa manfaat olahraga bagi tubuh?", opsi: ["Menguatkan badan dan menjaga kesehatan", "Membuat lelah", "Menambah penyakit", "Membuang waktu"], jawaban: 0 }
+        ],
+        game: [
+            { kata: ["الرِّيَاضَةُ", "تُقَوِّي", "الجِسْمَ", "وَتَحْفَظُ", "الصِّحَّةَ"], arti: "Olahraga menguatkan badan dan menjaga kesehatan" },
+            { kata: ["أُحِبُّ", "رِيَاضَةَ", "كُرَةِ", "القَدَمِ"], arti: "Aku menyukai olahraga sepak bola" },
+            { kata: ["نَلْعَبُ", "فِي", "مَلْعَبِ", "المَدْرَسَةِ", "يَوْمَ", "الجُمُعَةِ"], arti: "Kami bermain di lapangan sekolah pada hari Jumat" },
+            { kata: ["العَقْلُ", "السَّلِيمُ", "فِي", "الجِسْمِ", "السَّلِيمِ"], arti: "Akal yang sehat terdapat pada badan yang sehat" },
+            { kata: ["الفَرِيقُ", "الفَائِزُ", "يَفْرَحُ", "بِالْفَوْزِ"], arti: "Tim yang menang bergembira dengan kemenangan" },
+            { kata: ["نَحْنُ", "نُمَارِسُ", "الرِّيَاضَةَ", "بِانْتِظَامٍ"], arti: "Kami melakukan olahraga secara teratur" },
+            { kata: ["كُرَةُ", "السَّلَّةِ", "رِيَاضَةٌ", "مُمْتِعَةٌ", "جِدًّا"], arti: "Bola basket adalah olahraga yang sangat menyenangkan" },
+            { kata: ["الشَّبَابُ", "يَلْعَبُونَ", "بِرُوحٍ", "رِيَاضِيَّةٍ"], arti: "Para pemuda bermain dengan jiwa sportifitas" },
+            { kata: ["الحَمْدُ", "للهِ", "عَلَى", "نِعْمَةِ", "الصِّحَّةِ"], arti: "Segala puji bagi Allah atas nikmat kesehatan" },
+            { kata: ["الرِّيَاضَةُ", "تَنْشَطُ", "الجِسْمَ", "وَالعَقْلَ"], arti: "Olahraga menyegarkan badan dan akal" }
+        ]
+    },
+    {
+        id: "k8-b6",
+        kelas: "KELAS VIII",
+        judulArab: "الْمِهْنَةُ",
+        judulLatin: "Al-Mihnah (Profesi / Cita-cita)",
+        kosakata: [
+            { arab: "مِهْنَةٌ", latin: "Mihnatun", arti: "Profesi / Pekerjaan", kategori: "Profesi" },
+            { arab: "شُرْطِيٌّ", latin: "Syurtiyyun", arti: "Polisi", kategori: "Profesi" },
+            { arab: "طَبِيبٌ", latin: "Thabibun", arti: "Dokter", kategori: "Profesi" },
+            { arab: "مُهَنْدِسٌ", latin: "Muhandisun", arti: "Insinyur", kategori: "Profesi" },
+            { arab: "مُعَلِّمٌ", latin: "Mu'allimun", arti: "Guru", kategori: "Profesi" },
+            { arab: "فَلَّاحٌ", latin: "Fallahun", arti: "Petani", kategori: "Profesi" },
+            { arab: "تَاجِرٌ", latin: "Tajirun", arti: "Pedagang / Pengusaha", kategori: "Profesi" },
+            { arab: "مَرِيضٌ", latin: "Maridhun", arti: "Orang sakit", kategori: "Profesi" },
+            { arab: "مُسْتَشْفَى", latin: "Mustasfa", arti: "Rumah sakit", kategori: "Tempat" },
+            { arab: "مَدْرَسَةٌ", latin: "Madrasatun", arti: "Sekolah", kategori: "Tempat" },
+            { arab: "مَزْرَعَةٌ", latin: "Mazra'atun", arti: "Sawah / Ladang", kategori: "Tempat" },
+            { arab: "شَرِكَةٌ", latin: "Syarikatun", arti: "Perusahaan", kategori: "Tempat" },
+            { arab: "سُوقٌ", latin: "Suqun", arti: "Pasar", kategori: "Tempat" },
+            { arab: "مُسْتَقْبَلٌ", latin: "Mustaqbalun", arti: "Masa depan", kategori: "Umum" },
+            { arab: "حَارِسٌ", latin: "Harisun", arti: "Penjaga / Satpam", kategori: "Profesi" }
+        ],
+        hiwar: [
+            { pembicara: "Fauzi", arab: "مَاذَا تُحِبُّ أَنْ تَكُونَ فِي المُسْتَقْبَلِ يَا سَعِيدُ؟", indo: "Apa yang kamu suka jadikan di masa depan wahai Said?" },
+            { pembicara: "Said", arab: "أُحِبُّ أَنْ أَكُونَ طَبِيبًا نَاجِحًا فِي المُسْتَقْبَلِ.", indo: "Aku suka menjadi dokter yang sukses di masa depan." },
+            { pembicara: "Fauzi", arab: "لِمَاذَا تُحِبُّ مِهْنَةَ الطِّبِّ؟", indo: "Mengapa kamu menyukai profesi kedokteran?" },
+            { pembicara: "Said", arab: "لِأُسَاعِدَ المَرْضَى وَأُخَفِّفَ آلَامَهُمْ فِي المُسْتَشْفَى.", indo: "Agar aku membantu orang sakit dan meringankan penderitaan mereka di rumah sakit." },
+            { pembicara: "Fauzi", arab: "وَمَاذَا عَنْ أَبِيكَ؟ مَا مِهْنَتُهُ؟", indo: "Dan bagaimana dengan ayahmu? Apa profesinya?" },
+            { pembicara: "Said", arab: "أَبِي مُهَنْدِسٌ مَاهِرٌ يَعْمَلُ فِي شَرِكَةٍ كَبِيرَةٍ.", indo: "Ayahku adalah insinyur mahir yang bekerja di perusahaan besar." },
+            { pembicara: "Fauzi", arab: "وَأُمُّكَ؟ هَلْ تَعْمَلُ أَيْضًا؟", indo: "Dan ibumu? Apakah dia bekerja juga?" },
+            { pembicara: "Said", arab: "نَعَمْ، أُمِّي مُعَلِّمَةٌ تُعَلِّمُ اللُّغَةَ العَرَبِيَّةَ فِي المَدْرَسَةِ.", indo: "Ya, ibuku adalah guru yang mengajar bahasa Arab di sekolah." },
+            { pembicara: "Fauzi", arab: "مِهْنَةُ التَّعْلِيمِ شَرِيفَةٌ وَعَظِيمَةٌ.", indo: "Profesi pengajaran adalah profesi yang mulia dan agung." },
+            { pembicara: "Said", arab: "صَحِيحٌ، المُعَلِّمُ بِنَاءُ الأَجْيَالِ.", indo: "Benar, guru adalah pembangun generasi." }
+        ],
+        bacaan: [
+            { arab: "المِهَنُ فِي الحَيَاةِ كَثِيرَةٌ وَمُتَنَوِّعَةٌ لِخِدْمَةِ المُجْتَمَعِ.", indo: "Profesi dalam kehidupan sangat banyak dan beragam untuk melayani masyarakat." },
+            { arab: "كُلُّ فَرْدٍ فِي المُجْتَمَعِ يَحْتَاجُ إِلَى عَمَلٍ شَرِيفٍ.", indo: "Setiap individu di masyarakat membutuhkan pekerjaan yang mulia." },
+            { arab: "الطَّبِيبُ يُعَالِجُ المَرْضَى وَيَصِفُ الدَّوَاءَ فِي المُسْتَشْفَى.", indo: "Dokter mengobati orang sakit dan meresepkan obat di rumah sakit." },
+            { arab: "وَالمُهَنْدِسُ يَبْنِي البُيُوتَ وَالشَّوَارِعَ وَالجُسُورَ العَالِيَةَ.", indo: "Dan insinyur membangun rumah-rumah, jalan-jalan, dan jembatan tinggi." },
+            { arab: "وَالمُعَلِّمُ يُرَبِّي الأَجْيَالَ وَيُنَوِّرُ عُقُولَ الطُّلَّابِ بِالعِلْمِ.", indo: "Dan guru mendidik generasi-generasi dan menerangi akal siswa dengan ilmu." },
+            { arab: "وَالفَلَّاحُ يَزْرَعُ الأَرْضَ وَيُنْتِجُ الغِذَاءَ لِلنَّاسِ جَمِيعًا.", indo: "Dan petani menanam bumi dan menghasilkan makanan untuk seluruh manusia." },
+            { arab: "وَالتَّاجِرُ يَبِيعُ السِّلَعَ النَّافِعَةَ فِي السُّوقِ بِأَمَانَةٍ وَصِدْقٍ.", indo: "Dan pedagang menjual barang-barang bermanfaat di pasar dengan amanah dan jujur." },
+            { arab: "وَالشُّرْطِيُّ يَحْفَظُ الأَمْنَ وَالنِّظَامَ فِي البِلَادِ.", indo: "Dan polisi menjaga keamanan dan ketertiban di negeri." },
+            { arab: "نَحْنُ نَحْتَرِمُ جَمِيعَ المِهَنِ الشَّرِيفَةِ بِدُونِ اسْتِثْنَاءٍ.", indo: "Kami menghormati seluruh profesi mulia tanpa terkecuali." },
+            { arab: "العَمَلُ عِبَادَةٌ وَشَرَفٌ لِكُلِّ إِنْسَانٍ مُجْتَهِدٍ.", indo: "Bekerja adalah ibadah dan kehormatan bagi setiap manusia yang giat." }
+        ],
+        latihan: [
+            { pertanyaan: "Apa arti dari 'Mihnatun' (مِهْنَةٌ)?", opsi: ["Sekolah", "Profesi / Pekerjaan", "Rumah", "Rumah sakit"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Dokter' ke Bahasa Arab:", opsi: ["Thabibun", "Muhandisun", "Mu'allimun", "Syurtiyyun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Muhandisun' (مُهَنْدِسٌ)?", opsi: ["Guru", "Insinyur", "Polisi", "Petani"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Guru' ke Bahasa Arab:", opsi: ["Mu'allimun", "Tajirun", "Fallahun", "Harisun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Fallahun' (فَلَّاحٌ)?", opsi: ["Pedagang", "Petani", "Polisi", "Dokter"], jawaban: 1 },
+            { pertanyaan: "Apa cita-cita Said dalam hiwar?", opsi: ["Menjadi insinyur", "Menjadi dokter sukses", "Menjadi guru", "Menjadi polisi"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Rumah sakit' ke bahasa Arab:", opsi: ["Mustasfa", "Madrasatun", "Mazra'atun", "Suqun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Syurtiyyun' (شُرْطِيٌّ)?", opsi: ["Dokter", "Polisi", "Insinyur", "Petani"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Pasar' ke bahasa Arab:", opsi: ["Suqun", "Syarikatun", "Mustasfa", "Mazra'atun"], jawaban: 0 },
+            { pertanyaan: "Di mana dokter bekerja?", opsi: ["Di sekolah", "Di rumah sakit", "Di sawah", "Di pasar"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Tajirun' (تَاجِرٌ)?", opsi: ["Pedagang", "Petani", "Polisi", "Guru"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Sawah / Ladang' ke bahasa Arab:", opsi: ["Mazra'atun", "Syarikatun", "Mustasfa", "Suqun"], jawaban: 0 },
+            { pertanyaan: "Apa profesi ibu Said dalam hiwar?", opsi: ["Dokter", "Guru bahasa Arab", "Pedagang", "Insinyur"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Mustaqbalun' (مُسْتَقْبَلٌ)?", opsi: ["Masa lalu", "Masa depan", "Sekarang", "Kemarin"], jawaban: 1 },
+            { pertanyaan: "Bagaimana pandangan Islam terhadap pekerjaan yang halal?", opsi: ["Bekerja adalah ibadah", "Pekerjaan tidak penting", "Hanya untuk mencari uang", "Bukan urusan agama"], jawaban: 0 }
+        ],
+        game: [
+            { kata: ["أُحِبُّ", "أَنْ", "أَكُونَ", "طَبِيبًا", "نَاجِحًا"], arti: "Aku suka menjadi dokter yang sukses" },
+            { kata: ["الطَّبِيبُ", "يُعَالِجُ", "المَرْضَى", "فِي", "المُسْتَشْفَى"], arti: "Dokter mengobati orang sakit di rumah sakit" },
+            { kata: ["المُهَنْدِسُ", "يَبْنِي", "البُيُوتَ", "وَالشَّوَارِعَ"], arti: "Insinyur membangun rumah-rumah dan jalan-jalan" },
+            { kata: ["المُعَلِّمُ", "يُنَوِّرُ", "عُقُولَ", "الطُّلَّابِ"], arti: "Guru menerangi akal para siswa" },
+            { kata: ["الفَلَّاحُ", "يَزْرَعُ", "الأَرْضَ", "وَيُنْتِجُ", "الغِذَاءَ"], arti: "Petani menanam bumi dan menghasilkan makanan" },
+            { kata: ["الشُّرْطِيُّ", "يَحْفَظُ", "الأَمْنَ", "وَالنِّظَامَ"], arti: "Polisi menjaga keamanan dan ketertiban" },
+            { kata: ["أَبِي", "مُهَنْدِسٌ", "مَاهِرٌ", "فِي", "الشَّرِكَةِ"], arti: "Ayahku adalah insinyur mahir di perusahaan" },
+            { kata: ["العَمَلُ", "الشَّرِيفُ", "عِبَادَةٌ", "لِلْإِنْسَانِ"], arti: "Pekerjaan yang mulia adalah ibadah bagi manusia" },
+            { kata: ["نَحْنُ", "نَحْتَرِمُ", "جَمِيعَ", "المِهَنِ"], arti: "Kami menghormati seluruh profesi" },
+            { kata: ["مَاذَا", "تُحِبُّ", "أَنْ", "تَكُونَ", "مُسْتَقْبَلًا"], arti: "Apa yang kamu suka jadikan di masa depan" }
+        ]
+    }
+];
+
+const dataKelas9 = [
+    {
+        id: "k9-b1",
+        kelas: "KELAS IX",
+        judulArab: "رَأْسُ السَّنَةِ الْهِجْرِيَّةِ",
+        judulLatin: "Ra'sus Sanah Al-Hijriyyah (Tahun Baru Hijriah)",
+        kosakata: [
+            { arab: "سَنَةٌ", latin: "Sanatun", arti: "Tahun", kategori: "Waktu" },
+            { arab: "هِجْرَةٌ", latin: "Hijratun", arti: "Hijrah", kategori: "Sejarah" },
+            { arab: "مُحَرَّمٌ", latin: "Muharramun", arti: "Bulan Muharram", kategori: "Waktu" },
+            { arab: "تَارِيخٌ", latin: "Tarikhun", arti: "Sejarah / Tanggal", kategori: "Umum" },
+            { arab: "مُسْلِمٌ", latin: "Muslimun", arti: "Orang Islam", kategori: "Umum" },
+            { arab: "احْتِفَالٌ", latin: "Ihtifalun", arti: "Perayaan", kategori: "Acara" },
+            { arab: "مَسْجِدٌ", latin: "Masjidun", arti: "Masjid", kategori: "Tempat" },
+            { arab: "مُحَاضَرَةٌ", latin: "Muhadharatun", arti: "Ceramah / Pidato", kategori: "Acara" },
+            { arab: "دِينِيٌّ", latin: "Diniyyun", arti: "Keagamaan", kategori: "Sifat" },
+            { arab: "نَبِيٌّ", latin: "Nabiyyun", arti: "Nabi", kategori: "Sejarah" },
+            { arab: "رَسُولٌ", latin: "Rasulun", arti: "Rasul", kategori: "Sejarah" },
+            { arab: "مَدِينَةٌ", latin: "Madinatun", arti: "Kota Madinah", kategori: "Tempat" },
+            { arab: "مَكَّةٌ", latin: "Makkatun", arti: "Kota Makkah", kategori: "Tempat" },
+            { arab: "صَحَابِيٌّ", latin: "Sahabiyyun", arti: "Sahabat Nabi", kategori: "Sejarah" },
+            { arab: "يَوْمٌ", latin: "Yawmun", arti: "Hari", kategori: "Waktu" }
+        ],
+        hiwar: [
+            { pembicara: "Faruq", arab: "يَا أَمِينُ، مَاذَا نَفْعَلُ فِي يَوْمِ رَأْسِ السَّنَةِ الهِجْرِيَّةِ؟", indo: "Wahai Amin, apa yang kita lakukan di hari Tahun Baru Hijriah?" },
+            { pembicara: "Amin", arab: "نَحْتَفِلُ بِهَذَا اليَوْمِ العَظِيمِ فِي المَسْجِدِ بِمُحَاضَرَةٍ دِينِيَّةٍ.", indo: "Kita merayakan hari yang agung ini di masjid dengan ceramah keagamaan." },
+            { pembicara: "Faruq", arab: "مَا هَدَفُ الهِجْرَةِ النَّبَوِيَّةِ؟", indo: "Apa tujuan hijrah Nabi?" },
+            { pembicara: "Amin", arab: "هَدَفُهَا نَشْرُ الإِسْلَامِ وَإِقَامَةُ المُجْتَمَعِ الإِسْلَامِيِّ الأَوَّلِ فِي المَدِينَةِ.", indo: "Tujuannya adalah menyebarkan Islam dan mendirikan masyarakat Islam pertama di Madinah." },
+            { pembicara: "Faruq", arab: "مَنْ هَاجَرَ مَعَ النَّبِيِّ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ؟", indo: "Siapa yang berhijrah bersama Nabi shallallahu 'alaihi wa sallam?" },
+            { pembicara: "Amin", arab: "هَاجَرَ مَعَهُ صَحَابِيُّهُ الجَلِيلُ أَبُو بَكْرٍ الصِّدِّيقُ رَضِيَ اللهُ عَنْهُ.", indo: "Sahabat agungnya Abu Bakar Ash-Shiddiq radhiyallahu 'anhu hijrah bersamanya." },
+            { pembicara: "Faruq", arab: "هَلْ هَذَا اليَوْمُ عُطْلَةٌ رَسْمِيَّةٌ؟", indo: "Apakah hari ini adalah hari libur resmi?" },
+            { pembicara: "Amin", arab: "نَعَمْ، هُوَ عُطْلَةٌ رَسْمِيَّةٌ لِجَمِيعِ المُسْلِمِينَ فِي البِلَادِ.", indo: "Ya, ini adalah libur resmi bagi seluruh umat Islam di negeri ini." },
+            { pembicara: "Faruq", arab: "نَسْأَلُ اللهَ سَنَةً جَدِيدَةً مَلِيئَةً بِالبَرَكَةِ.", indo: "Kita memohon kepada Allah tahun baru yang penuh keberkahan." },
+            { pembicara: "Amin", arab: "آمِينُ يَا رَبَّ العَالَمِينَ.", indo: "Aamin ya Rabbal 'alamin." }
+        ],
+        bacaan: [
+            { arab: "يَحْتَفِلُ المُسْلِمُونَ كُلَّ عَامٍ بِذِكْرَى رَأْسِ السَّنَةِ الهِجْرِيَّةِ.", indo: "Umat Islam merayakan setiap tahun dengan peringatan Tahun Baru Hijriah." },
+            { arab: "تَارِيخُ الهِجْرَةِ يَبْدَأُ مِنْ هِجْرَةِ النَّبِيِّ مُحَمَّدٍ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ.", indo: "Tanggal hijrah bermula dari hijrah Nabi Muhammad shallallahu 'alaihi wa sallam." },
+            { arab: "مِنْ مَكَّةَ المُكَرَّمَةِ إِلَى المَدِينَةِ المُنَوَّرَةِ.", indo: "Dari Makkah Al-Mukarramah ke Madinah Al-Munawwarah." },
+            { arab: "كَانَتِ الهِجْرَةُ نُقْطَةَ تَحَوُّلٍ عَظِيمَةً فِي تَارِيخِ الإِسْلَامِ.", indo: "Hijrah adalah titik balik yang sangat agung dalam sejarah Islam." },
+            { arab: "فِي هَذَا اليَوْمِ المُبَارَكِ، يَتَذَكَّرُ المُسْلِمُونَ دُرُوسَ الهِجْرَةِ.", indo: "Pada hari yang diberkahi ini, umat Islam mengenang pelajaran-pelajaran hijrah." },
+            { arab: "مِنْهَا الصَّبْرُ وَالثَّبَاتُ عَلَى الحَقِّ وَالتَّوَكُّلُ عَلَى اللهِ.", indo: "Di antaranya kesabaran, keteguhan di atas kebenaran, dan tawakal kepada Allah." },
+            { arab: "يُقِيمُ النَّاسُ احْتِفَالَاتٍ دِينِيَّةً فِي المَسَاجِدِ وَالمَدَارِسِ.", indo: "Masyarakat mengadakan perayaan-perayaan keagamaan di masjid dan sekolah." },
+            { arab: "وَيَسْتَمِعُونَ إِلَى المَحَاضَرَاتِ النَّافِعَةِ عَنْ سِيرَةِ النَّبِيِّ.", indo: "Dan mereka mendengarkan ceramah-ceramah bermanfaat tentang sirah Nabi." },
+            { arab: "نَحْنُ نَسْتَقْبِلُ السَّنَةَ الجَدِيدَةَ بِالعَمَلِ الصَّالِحِ وَالأَمَلِ.", indo: "Kita menyambut tahun baru dengan amal saleh dan harapan." },
+            { arab: "جَعَلَهَا اللهُ سَنَةَ خَيْرٍ وَبَرَكَةٍ وَسَلَامٍ لِلْجَمِيعِ.", indo: "Semoga Allah menjadikannya tahun kebaikan, keberkahan, dan kedamaian bagi semua." }
+        ],
+        latihan: [
+            { pertanyaan: "Apa arti dari 'Sanatun' (سَنَةٌ)?", opsi: ["Bulan", "Tahun", "Hari", "Jam"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Hijrah' ke Bahasa Arab:", opsi: ["Hijratun", "Tarikhun", "Ihtifalun", "Yawmun"], jawaban: 0 },
+            { pertanyaan: "Apa nama bulan pertama dalam kalender Hijriah?", opsi: ["Ramadhan", "Muharram", "Syawal", "Rabiul Awal"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Perayaan' ke Bahasa Arab:", opsi: ["Ihtifalun", "Muhadharatun", "Tarikhun", "Diniyyun"], jawaban: 0 },
+            { pertanyaan: "Dari kota mana Nabi Muhammad hijrah?", opsi: ["Madinah", "Makkah", "Thaif", "Jeddah"], jawaban: 1 },
+            { pertanyaan: "Ke kota mana Nabi Muhammad hijrah?", opsi: ["Makkah", "Madinah", "Syam", "Yaman"], jawaban: 1 },
+            { pertanyaan: "Siapa sahabat yang menemani Nabi saat hijrah?", opsi: ["Umar bin Khattab", "Abu Bakar Ash-Shiddiq", "Utsman bin Affan", "Ali bin Abi Thalib"], jawaban: 1 },
+            { pertanyaan: "Apa arti dari 'Muhadharatun' (مُحَاضَرَةٌ)?", opsi: ["Ceramah / Pidato", "Buku", "Sekolah", "Masjid"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Orang Islam' ke Bahasa Arab:", opsi: ["Muslimun", "Nasraniun", "Yahudiyyun", "Sahabiyyun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Diniyyun' (دِينِيٌّ)?", opsi: ["Keagamaan", "Pendidikan", "Sejarah", "Sosial"], jawaban: 0 },
+            { pertanyaan: "Di mana umat Islam merayakan tahun baru dalam hiwar?", opsi: ["Di pasar", "Di masjid", "Di lapangan", "Di rumah sakit"], jawaban: 1 },
+            { pertanyaan: "Terjemahkan 'Nabi' ke Bahasa Arab:", opsi: ["Nabiyyun", "Rasulun", "Sahabiyyun", "Khalifatun"], jawaban: 0 },
+            { pertanyaan: "Apa makna penting dari peristiwa Hijrah?", opsi: ["Titik balik sejarah dan penyebaran Islam", "Rekreasi", "Perdagangan", "Pariwisata"], jawaban: 0 },
+            { pertanyaan: "Bagaimana seharusnya kita menyambut tahun baru Hijriah?", opsi: ["Dengan amal saleh", "Dengan hura-hura", "Dengan tidur", "Dengan kesedihan"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Yawmun' (يَوْمٌ)?", opsi: ["Hari", "Malam", "Tahun", "Bulan"], jawaban: 0 }
+        ],
+        game: [
+            { kata: ["نَحْتَفِلُ", "بِرَأْسِ", "السَّنَةِ", "الهِجْرِيَّةِ"], arti: "Kami merayakan tahun baru Hijriah" },
+            { kata: ["هَاجَرَ", "النَّبِيُّ", "مِنْ", "مَكَّةَ", "إِلَى", "المَدِينَةِ"], arti: "Nabi hijrah dari Makkah ke Madinah" },
+            { kata: ["صَاحَبَهُ", "أَبُو", "بَكْرٍ", "الصِّدِّيقُ"], arti: "Abu Bakar Ash-Shiddiq menemaninya" },
+            { kata: ["نُقِيمُ", "مُحَاضَرَةً", "دِينِيَّةً", "فِي", "المَسْجِدِ"], arti: "Kami mendirikan ceramah keagamaan di masjid" },
+            { kata: ["الهِجْرَةُ", "نُقْطَةُ", "تَحَوُّلٍ", "عَظِيمَةٌ"], arti: "Hijrah adalah titik balik yang agung" },
+            { kata: ["نَسْتَقْبِلُ", "العَامَ", "الجَدِيدَ", "بِالعَمَلِ", "الصَّالِحِ"], arti: "Kami menyambut tahun baru dengan amal saleh" },
+            { kata: ["جَعَلَهَا", "اللهُ", "سَنَةَ", "خَيْرٍ", "وَبَرَكَةٍ"], arti: "Semoga Allah menjadikannya tahun kebaikan dan keberkahan" },
+            { kata: ["التَّارِيخُ", "الإِسْلَامِيُّ", "يَبْدَأُ", "بِالهِجْرَةِ"], arti: "Sejarah Islam dimulai dengan hijrah" },
+            { kata: ["المُسْلِمُونَ", "يَتَذَكَّرُونَ", "دُرُوسَ", "الهِجْرَةِ"], arti: "Umat Islam mengenang pelajaran-pelajaran hijrah" },
+            { kata: ["آمِينُ", "يَا", "رَبَّ", "العَالَمِينَ"], arti: "Aamin ya Rabbal 'alamin" }
+        ]
+    },
+    {
+        id: "k9-b2",
+        kelas: "KELAS IX",
+        judulArab: "مَوْلِدُ النَّبِيِّ",
+        judulLatin: "Maulidun Nabi (Kelahiran Nabi Muhammad SAW)",
+        kosakata: [
+            { arab: "مَوْلِدٌ", latin: "Mawlidun", arti: "Kelahiran", kategori: "Sejarah" },
+            { arab: "رَبِيعُ الأَوَّلِ", latin: "Rabi'ul Awwali", arti: "Bulan Rabiul Awal", kategori: "Waktu" },
+            { arab: "فِيلٌ", latin: "Fiilun", arti: "Gajah", kategori: "Sejarah" },
+            { arab: "عَامٌ", latin: "'Amun", arti: "Tahun", kategori: "Waktu" },
+            { arab: "يَتِيمٌ", latin: "Yatimun", arti: "Anak yatim", kategori: "Sifat" },
+            { arab: "أَبٌ", latin: "Abun", arti: "Ayah", kategori: "Keluarga" },
+            { arab: "أُمٌّ", latin: "Ummu", arti: "Ibu", kategori: "Keluarga" },
+            { arab: "جَدٌّ", latin: "Jaddun", arti: "Kakek", kategori: "Keluarga" },
+            { arab: "عَمٌّ", latin: "Ammu", arti: "Paman", kategori: "Keluarga" },
+            { arab: "أَمِينٌ", latin: "Aminun", arti: "Terpercaya / Al-Amin", kategori: "Sifat" },
+            { arab: "صَادِقٌ", latin: "Sadiqun", arti: "Jujur", kategori: "Sifat" },
+            { arab: "رِسَالَةٌ", latin: "Risalatun", arti: "Risalah / Kenabian", kategori: "Umum" },
+            { arab: "أَخْلَاقٌ", latin: "Akhlaqun", arti: "Akhlak / Budi pekerti", kategori: "Sifat" },
+            { arab: "قُدْوَةٌ", latin: "Qudwatun", arti: "Teladan", kategori: "Sifat" },
+            { arab: "حَبِيبٌ", latin: "Habibun", arti: "Kekasih", kategori: "Sifat" }
+        ],
+        hiwar: [
+            { pembicara: "Zaky", arab: "يَا أُسْتَاذُ، مَتَى وُلِدَ النَّبِيُّ مُحَمَّدٌ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ؟", indo: "Wahai Pak Guru, kapan Nabi Muhammad shallallahu 'alaihi wa sallam dilahirkan?" },
+            { pembicara: "Ustaz", arab: "وُلِدَ النَّبِيُّ فِي عَامِ الفِيلِ، فِي شَهْرِ رَبِيعِ الأَوَّلِ.", indo: "Nabi dilahirkan pada Tahun Gajah, di bulan Rabiul Awal." },
+            { pembicara: "Zaky", arab: "مَنْ هُمَا وَالِدَاهُ؟", indo: "Siapa kedua orang tuanya?" },
+            { pembicara: "Ustaz", arab: "أَبُوهُ عَبْدُ اللهِ وَأُمُّهُ آمِنَةُ بِنْتُ وَهَبٍ.", indo: "Ayahnya Abdullah dan ibunya Aminah binti Wahab." },
+            { pembicara: "Zaky", arab: "وَهَلْ مَاتَ أَبُوهُ قَبْلَ وِلَادَتِهِ؟", indo: "Dan apakah ayahnya wafat sebelum kelahirannya?" },
+            { pembicara: "Ustaz", arab: "نَعَمْ، مَاتَ أَبُوهُ وَهُوَ جَنِينٌ فِي بَطْنِ أُمِّهِ.", indo: "Ya, ayahnya wafat saat ia masih janin di perut ibunya." },
+            { pembicara: "Zaky", arab: "لِمَاذَا نَحْتَفِلُ بِمَوْلِدِ النَّبِيِّ؟", indo: "Mengapa kita merayakan Maulid Nabi?" },
+            { pembicara: "Ustaz", arab: "لِنَتَذَكَّرَ سِيرَتَهُ العَطِرَةَ وَنَتَأَسَّى بِأَخْلَاقِهِ الكَرِيمَةِ.", indo: "Agar kita mengenang sirahnya yang harum dan meneladani akhlaknya yang mulia." },
+            { pembicara: "Zaky", arab: "كَانَ النَّبِيُّ مَعْرُوفًا بِالصِّدْقِ وَالأَمَانَةِ.", indo: "Nabi dikenal dengan kejujuran dan amanah." },
+            { pembicara: "Ustaz", arab: "نَعَمْ، هُوَ القُدْوَةُ الحَسَنَةُ لِكُلِّ المُسْلِمِينَ.", indo: "Ya, beliau adalah teladan yang baik bagi seluruh umat Islam." }
+        ],
+        bacaan: [
+            { arab: "نَحْتَفِلُ بِذِكْرَى مَوْلِدِ النَّبِيِّ المُصْطَفَى كُلَّ عَامٍ.", indo: "Kami merayakan peringatan kelahiran Nabi Al-Musthafa setiap tahun." },
+            { arab: "وُلِدَ النَّبِيُّ مُحَمَّدٌ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ فِي مَكَّةَ المُكَرَّمَةِ.", indo: "Nabi Muhammad shallallahu 'alaihi wa sallam dilahirkan di Makkah Al-Mukarramah." },
+            { arab: "فِي يَوْمِ الإِثْنَيْنِ، الثَّانِي عَشَرَ مِنْ شَهْرِ رَبِيعِ الأَوَّلِ.", indo: "Pada hari Senin, tanggal 12 bulan Rabiul Awal." },
+            { arab: "عَامَ الفِيلِ المَعْرُوفِ فِي التَّارِيخِ العَرَبِيِّ.", indo: "Tahun Gajah yang terkenal dalam sejarah Arab." },
+            { arab: "نَشَأَ يَتِيمًا، فَمَاتَ أَبُوهُ قَبْلَ وِلَادَتِهِ وَمَاتَتْ أُمُّهُ وَهُوَ صَغِيرٌ.", indo: "Ia tumbuh sebagai anak yatim, ayahnya wafat sebelum lahir dan ibunya wafat saat ia kecil." },
+            { arab: "ثُمَّ كَفَلَهُ جَدُّهُ عَبْدُ المُطَّلِبِ ثُمَّ عَمُّهُ أَبُو طَالِبٍ.", indo: "Kemudian kakeknya Abdul Muthalib merawatnya, lalu pamannya Abu Thalib." },
+            { arab: "عَرَفَهُ قَوْمُهُ بِالصَّادِقِ الأَمِينِ لِأَنَّهُ كَانَ صَادِقًا فِي أَقْوَالِهِ وَأَفْعَالِهِ.", indo: "Kaumnya mengenalnya sebagai As-Shadiq Al-Amin karena ia jujur dalam ucapan dan perbuatannya." },
+            { arab: "أَرْسَلَهُ اللهُ رَحْمَةً لِلْعَالَمِينَ لِنَشْرِ الحَقِّ وَالعَدْلِ.", indo: "Allah mengutusnya sebagai rahmat bagi semesta alam untuk menyebarkan kebenaran dan keadilan." },
+            { arab: "أَخْلَاقُهُ كَانَتْ قُرْآنًا يَمْشِي عَلَى الأَرْضِ.", indo: "Akhlaknya adalah Al-Qur'an yang berjalan di atas bumi." },
+            { arab: "فَعَلَيْنَا أَنْ نُحِبَّهُ وَنَتَّبِعَ سُنَّتَهُ الطَّاهِرَةَ طِوَالَ الحَيَاةِ.", indo: "Maka kewajiban kita adalah mencintainya dan mengikuti sunnahnya yang suci sepanjang hidup." }
+        ],
+        latihan: [
+            { pertanyaan: "Apa arti dari 'Mawlidun' (مَوْلِدٌ)?", opsi: ["Kelahiran", "Wafat", "Hijrah", "Perjalanan"], jawaban: 0 },
+            { pertanyaan: "Di bulan apa Nabi Muhammad dilahirkan?", opsi: ["Ramadhan", "Rabiul Awal", "Muharram", "Syawal"], jawaban: 1 },
+            { pertanyaan: "Pada Tahun apa Nabi dilahirkan?", opsi: ["Tahun Gajah", "Tahun Hijrah", "Tahun Fitnah", "Tahun Kemenangan"], jawaban: 0 },
+            { pertanyaan: "Siapa nama ayah Nabi Muhammad?", opsi: ["Abu Thalib", "Abdullah", "Abdul Muthalib", "Abu Bakar"], jawaban: 1 },
+            { pertanyaan: "Siapa nama ibu Nabi Muhammad?", opsi: ["Fatimah", "Khadijah", "Aminah", "Aisyah"], jawaban: 2 },
+            { pertanyaan: "Apa arti dari 'Yatimun' (يَتِيمٌ)?", opsi: ["Anak yatim", "Anak piatu", "Orang kaya", "Pemimpin"], jawaban: 0 },
+            { pertanyaan: "Siapa yang merawat Nabi setelah kakeknya wafat?", opsi: ["Abu Thalib (paman)", "Umar bin Khattab", "Hamzah", "Ali bin Abi Thalib"], jawaban: 0 },
+            { pertanyaan: "Apa julukan Nabi Muhammad dari kaumnya?", opsi: ["Al-Amin (Terpercaya)", "Al-Qawiy", "Al-Ghany", "Al-Hakim"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Akhlak' ke Bahasa Arab:", opsi: ["Akhlaqun", "Risalatun", "Qudwatun", "Habibun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Qudwatun' (قُدْوَةٌ)?", opsi: ["Teladan", "Musuh", "Teman", "Pengikut"], jawaban: 0 },
+            { pertanyaan: "Mengapa kita memperingati Maulid Nabi?", opsi: ["Untuk mengenang sirah dan meneladani akhlaknya", "Untuk rekreasi", "Untuk berdagang", "Untuk tidur"], jawaban: 0 },
+            { pertanyaan: "Bagaimana akhlak Nabi Muhammad menurut bacaan?", opsi: ["Seperti Al-Qur'an yang berjalan", "Biasa saja", "Keras", "Tertutup"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Kekasih' ke Bahasa Arab:", opsi: ["Habibun", "Sadiqun", "Aminun", "Yatimun"], jawaban: 0 },
+            { pertanyaan: "Sebagai apa Nabi Muhammad diutus ke bumi?", opsi: ["Rahmatan lil 'alamin", "Raja dunia", "Pedagang kaya", "Panglima perang"], jawaban: 0 },
+            { pertanyaan: "Siapa kakek yang merawat Nabi setelah ibunya wafat?", opsi: ["Abdul Muthalib", "Abu Lahab", "Abu Sufyan", "Umayyah"], jawaban: 0 }
+        ],
+        game: [
+            { kata: ["وُلِدَ", "النَّبِيُّ", "مُحَمَّدٌ", "فِي", "عَامِ", "الفِيلِ"], arti: "Nabi Muhammad dilahirkan pada Tahun Gajah" },
+            { kata: ["أَبُوهُ", "عَبْدُ", "اللهِ", "وَأُمُّهُ", "آمِنَةُ"], arti: "Ayahnya Abdullah dan ibunya Aminah" },
+            { kata: ["نَشَأَ", "يَتِيمًا", "فَكَفَلَهُ", "جَدُّهُ"], arti: "Ia tumbuh yatim lalu dirawat kakeknya" },
+            { kata: ["عَرَفَهُ", "قَوْمُهُ", "بِالصَّادِقِ", "الأَمِينِ"], arti: "Kaumnya mengenalnya sebagai yang jujur lagi terpercaya" },
+            { kata: ["أَرْسَلَهُ", "اللهُ", "رَحْمَةً", "لِلْعَالَمِينَ"], arti: "Allah mengutusnya sebagai rahmat bagi semesta alam" },
+            { kata: ["أَخْلَاقُ", "النَّبِيِّ", "قُرْآنٌ", "يَمْشِي"], arti: "Akhlak Nabi adalah Al-Qur'an yang berjalan" },
+            { kata: ["نَحْنُ", "نُحِبُّ", "رَسُولَ", "اللهِ", "كَثِيرًا"], arti: "Kami sangat mencintai Rasulullah" },
+            { kata: ["النَّبِيُّ", "هُوَ", "القُدْوَةُ", "الحَسَنَةُ"], arti: "Nabi adalah teladan yang baik" },
+            { kata: ["نَحْتَفِلُ", "بِمَوْلِدِ", "الرَّسُولِ", "كُلَّ", "عَامٍ"], arti: "Kami merayakan maulid Rasul setiap tahun" },
+            { kata: ["صَلَّى", "اللهُ", "عَلَيْهِ", "وَسَلَّمَ"], arti: "Semoga Allah melimpahkan shalawat dan salam kepadanya" }
+        ]
+    },
+    {
+        id: "k9-b3",
+        kelas: "KELAS IX",
+        judulArab: "الْعِيْدَانِ وَنُزُوْلُ الْقُرْآنِ",
+        judulLatin: "Al-'Idan wa Nuzulul Qur'an (Hari Raya & Nuzulul Quran)",
+        kosakata: [
+            { arab: "عِيدٌ", latin: "'Idun", arti: "Hari Raya", kategori: "Hari Raya" },
+            { arab: "فِطْرٌ", latin: "Fitrun", arti: "Idul Fitri", kategori: "Hari Raya" },
+            { arab: "أَضْحَى", latin: "Adhha", arti: "Idul Adha", kategori: "Hari Raya" },
+            { arab: "قُرْآنٌ", latin: "Qur'anun", arti: "Al-Qur'an", kategori: "Kitab" },
+            { arab: "نُزُولٌ", latin: "Nuzulun", arti: "Turunnya", kategori: "Sejarah" },
+            { arab: "رَمَضَانُ", latin: "Ramadhanu", arti: "Bulan Ramadhan", kategori: "Waktu" },
+            { arab: "صِيَامٌ", latin: "Siyamun", arti: "Puasa", kategori: "Ibadah" },
+            { arab: "صَلَاةٌ", latin: "Salatun", arti: "Shalat", kategori: "Ibadah" },
+            { arab: "قُرْبَانٌ", latin: "Qurbanun", arti: "Qurban", kategori: "Ibadah" },
+            { arab: "حَجٌّ", latin: "Hajjun", arti: "Haji", kategori: "Ibadah" },
+            { arab: "مَسْجِدٌ", latin: "Masjidun", arti: "Masjid", kategori: "Tempat" },
+            { arab: "فَرَحٌ", latin: "Farahun", arti: "Kegembiraan", kategori: "Sifat" },
+            { arab: "تَهْنِئَةٌ", latin: "Tahniatun", arti: "Ucapan selamat", kategori: "Umum" },
+            { arab: "مَغْفِرَةٌ", latin: "Maghfiratun", arti: "Ampunan", kategori: "Umum" },
+            { arab: "صَدَقَةٌ", latin: "Sadaqatun", arti: "Sedekah", kategori: "Ibadah" }
+        ],
+        hiwar: [
+            { pembicara: "Ridwan", arab: "يَا حَامِدُ، مَا هُمَا العِيدَانِ فِي الإِسْلَامِ؟", indo: "Wahai Hamid, apa dua hari raya dalam Islam?" },
+            { pembicara: "Hamid", arab: "العِيدَانِ هُمَا: عِيدُ الفِطْرِ وَعِيدُ الأَضْحَى.", indo: "Dua hari raya itu adalah: Idul Fitri dan Idul Adha." },
+            { pembicara: "Ridwan", arab: "مَتَى نَحْتَفِلُ بِعِيدِ الفِطْرِ؟", indo: "Kapan kita merayakan Idul Fitri?" },
+            { pembicara: "Hamid", arab: "نَحْتَفِلُ بِعِيدِ الفِطْرِ فِي اليَوْمِ الأَوَّلِ مِنْ شَهْرِ شَوَّالٍ، بَعْدَ صِيَامِ رَمَضَانَ.", indo: "Kita merayakannya pada tanggal 1 Syawal, setelah puasa Ramadhan." },
+            { pembicara: "Ridwan", arab: "وَمَاذَا عَنْ عِيدِ الأَضْحَى؟", indo: "Dan bagaimana dengan Idul Adha?" },
+            { pembicara: "Hamid", arab: "نَحْتَفِلُ بِهِ فِي العَاشِرِ مِنْ ذِي الحِجَّةِ، وَفِيهِ نَذْبَحُ الأُضْحِيَةَ.", indo: "Kita merayakannya pada tanggal 10 Dzulhijjah, dan padanya kita menyembelih qurban." },
+            { pembicara: "Ridwan", arab: "وَمَتَى نُحْيِي لَيْلَةَ نُزُولِ القُرْآنِ؟", indo: "Dan kapan kita menghidupkan malam turunnya Al-Qur'an?" },
+            { pembicara: "Hamid", arab: "نُحْيِيهَا فِي شَهْرِ رَمَضَانَ المُبَارَكِ، وَهِيَ لَيْلَةُ القَدْرِ.", indo: "Kita menghidupkannya di bulan Ramadhan yang diberkahi, yaitu malam Lailatul Qadar." },
+            { pembicara: "Ridwan", arab: "مَاذَا نَفْعَلُ فِي العِيدِ؟", indo: "Apa yang kita lakukan di hari raya?" },
+            { pembicara: "Hamid", arab: "نُصَلِّي صَلَاةَ العِيدِ وَنَتَبَادَلُ التَّهَانِيَ وَنَزُورُ الأَقَارِبَ.", indo: "Kita shalat Id, saling bertukar ucapan selamat, dan mengunjungi kerabat." }
+        ],
+        bacaan: [
+            { arab: "لِلْمُسْلِمِينَ عِيدَانِ عَظِيمَانِ يَحْتَفِلُونَ بِهِمَا كُلَّ عَامٍ.", indo: "Bagi umat Islam terdapat dua hari raya agung yang dirayakan setiap tahun." },
+            { arab: "العِيدُ الأَوَّلُ هُوَ عِيدُ الفِطْرِ المُبَارَكِ بَعْدَ إِتْمَامِ صِيَامِ رَمَضَانَ.", indo: "Hari raya pertama adalah Idul Fitri yang diberkahi setelah menyempurnakan puasa Ramadhan." },
+            { arab: "وَالعِيدُ الثَّانِي هُوَ عِيدُ الأَضْحَى المُبَارَكِ فِي عَاشِرِ ذِي الحِجَّةِ.", indo: "Dan hari raya kedua adalah Idul Adha yang diberkahi pada tanggal 10 Dzulhijjah." },
+            { arab: "فِي هذَيْنِ العِيدَيْنِ، يَخْرُجُ المُسْلِمُونَ إِلَى المُصَلَّى أَوْ المَسْجِدِ.", indo: "Pada dua hari raya ini, umat Islam keluar menuju lapangan shalat atau masjid." },
+            { arab: "لِأَدَاءِ صَلَاةِ العِيدِ وَسَمَاعِ الخُطْبَةِ الدِّينِيَّةِ النَّافِعَةِ.", indo: "Untuk menunaikan shalat Id dan mendengarkan khutbah keagamaan yang bermanfaat." },
+            { arab: "وَفِي شَهْرِ رَمَضَانَ، نَحْتَفِلُ أَيْضًا بِمُنَاسَبَةٍ عَظِيمَةٍ وَهِيَ نُزُولُ القُرْآنِ.", indo: "Dan di bulan Ramadhan, kita juga merayakan peristiwa agung yaitu turunnya Al-Qur'an." },
+            { arab: "أُنْزِلَ القُرْآنُ الكَرِيمُ عَلَى النَّبِيِّ مُحَمَّدٍ فِي لَيْلَةِ القَدْرِ.", indo: "Al-Qur'an Al-Karim diturunkan kepada Nabi Muhammad pada malam Lailatul Qadar." },
+            { arab: "القُرْآنُ هُوَ كِتَابُ اللهِ وَهُدًى وَرَحْمَةً لِلْعَالَمِينَ.", indo: "Al-Qur'an adalah kitab Allah serta petunjuk dan rahmat bagi semesta alam." },
+            { arab: "فَيَنْبَغِي لَنَا تِلَاوَةُ القُرْآنِ وَتَدَبُّرُ مَعَانِيهِ دَائِمًا.", indo: "Maka sepatutnya bagi kita membaca Al-Qur'an dan merenungkan maknanya selalu." },
+            { arab: "جَعَلَ اللهُ أَيَّامَنَا كُلَّهَا أَعْيَادًا وَأَفْرَاحًا مُبَارَكَةً.", indo: "Semoga Allah menjadikan hari-hari kita seluruhnya penuh kebahagiaan dan keberkahan." }
+        ],
+        latihan: [
+            { pertanyaan: "Apa arti dari 'Eidun' (عِيدٌ)?", opsi: ["Hari Raya", "Bulan", "Tahun", "Hari biasa"], jawaban: 0 },
+            { pertanyaan: "Apa dua hari raya dalam Islam?", opsi: ["Idul Fitri dan Idul Adha", "Tahun Baru dan Maulid", "Jumat dan Sabtu", "Syawal dan Dzulhijjah"], jawaban: 0 },
+            { pertanyaan: "Kapan Idul Fitri dirayakan?", opsi: ["1 Syawal", "10 Dzulhijjah", "1 Muharram", "12 Rabiul Awal"], jawaban: 0 },
+            { pertanyaan: "Kapan Idul Adha dirayakan?", opsi: ["10 Dzulhijjah", "1 Syawal", "1 Ramadhan", "27 Rajab"], jawaban: 0 },
+            { pertanyaan: "Apa ibadah utama yang dilakukan saat Idul Adha?", opsi: ["Menyembelih hewan qurban", "Puasa sebulan", "Zakat fitrah", "Umrah"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Al-Qur'an' ke Bahasa Arab:", opsi: ["Qur'anun", "Injilun", "Tauratun", "Zaburun"], jawaban: 0 },
+            { pertanyaan: "Kapan Al-Qur'an diturunkan menurut bacaan?", opsi: ["Di malam Lailatul Qadar (Ramadhan)", "Di bulan Muharram", "Di bulan Syawal", "Di Hari Raya Qurban"], jawaban: 0 },
+            { pertanyaan: "Apa fungsi Al-Qur'an bagi manusia?", opsi: ["Sebagai petunjuk dan rahmat", "Sebagai hiasan", "Sebagai bacaan tidur", "Sebagai sejarah lama"], jawaban: 0 },
+            { pertanyaan: "Apa yang dilakukan umat Islam saat pagi hari Id?", opsi: ["Shalat Id di lapangan/masjid", "Tidur seharian", "Bekerja di sawah", "Berperang"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Ampunan' ke Bahasa Arab:", opsi: ["Maghfiratun", "Farahun", "Tahniatun", "Sadaqatun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Siyamun' (صِيَامٌ)?", opsi: ["Puasa", "Shalat", "Zakat", "Haji"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Tahniatun' (تَهْنِئَةٌ)?", opsi: ["Ucapan selamat", "Permintaan maaf", "Kesedihan", "Pertanyaan"], jawaban: 0 },
+            { pertanyaan: "Di bulan apa puasa wajib dikerjakan?", opsi: ["Ramadhan", "Sya'ban", "Rajab", "Syawal"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Qurbanun' (قُرْبَانٌ)?", opsi: ["Qurban", "Sedekah", "Hadiah", "Zakat"], jawaban: 0 },
+            { pertanyaan: "Bagaimana sikap kita terhadap Al-Qur'an?", opsi: ["Membaca dan merenungkan maknanya", "Menyimpannya saja", "Membacanya hanya saat ujian", "Melupakannya"], jawaban: 0 }
+        ],
+        game: [
+            { kata: ["لِلْمُسْلِمِينَ", "عِيدَانِ", "عَظِيمَانِ", "فِي", "السَّنَةِ"], arti: "Bagi umat Islam ada dua hari raya agung dalam setahun" },
+            { kata: ["نَحْتَفِلُ", "بِعِيدِ", "الفِطْرِ", "بَعْدَ", "رَمَضَانَ"], arti: "Kami merayakan Idul Fitri setelah Ramadhan" },
+            { kata: ["نَذْبَحُ", "الأُضْحِيَةَ", "فِي", "عِيدِ", "الأَضْحَى"], arti: "Kami menyembelih qurban di Hari Raya Idul Adha" },
+            { kata: ["أُنْزِلَ", "القُرْآنُ", "الكَرِيمُ", "فِي", "رَمَضَانَ"], arti: "Al-Qur'an Al-Karim diturunkan di bulan Ramadhan" },
+            { kata: ["القُرْآنُ", "هُدًى", "وَرَحْمَةٌ", "لِلْعَالَمِينَ"], arti: "Al-Qur'an adalah petunjuk dan rahmat bagi semesta alam" },
+            { kata: ["نُصَلِّي", "صَلَاةَ", "العِيدِ", "فِي", "المَسْجِدِ"], arti: "Kami menunaikan shalat Id di masjid" },
+            { kata: ["نَتَبَادَلُ", "التَّهَانِيَ", "وَنَزُورُ", "الأَقَارِبَ"], arti: "Kami bertukar ucapan selamat dan mengunjungi kerabat" },
+            { kata: ["اللَّيْلَةُ", "المُبَارَكَةُ", "هِيَ", "لَيْلَةُ", "القَدْرِ"], arti: "Malam yang diberkahi adalah malam Lailatul Qadar" },
+            { kata: ["نَحْنُ", "نَقْرَأُ", "القُرْآنَ", "كُلَّ", "يَوْمٍ"], arti: "Kami membaca Al-Qur'an setiap hari" },
+            { kata: ["الحَمْدُ", "للهِ", "عَلَى", "نِعَمِ", "الأَعْيَادِ"], arti: "Segala puji bagi Allah atas nikmat hari-hari raya" }
+        ]
+    },
+    {
+        id: "k9-b4",
+        kelas: "KELAS IX",
+        judulArab: "جَمَالُ الطَّبِيْعِيَّةِ",
+        judulLatin: "Jamalut Thabi'ah (Keindahan Alam)",
+        kosakata: [
+            { arab: "طَبِيعَةٌ", latin: "Thabi'atun", arti: "Alam", kategori: "Alam" },
+            { arab: "جَمَالٌ", latin: "Jamalun", arti: "Keindahan", kategori: "Sifat" },
+            { arab: "جَبَلٌ", latin: "Jabalun", arti: "Gunung", kategori: "Alam" },
+            { arab: "نَهْرٌ", latin: "Nahrun", arti: "Sungai", kategori: "Alam" },
+            { arab: "بَحْرٌ", latin: "Bahrun", arti: "Laut", kategori: "Alam" },
+            { arab: "شَجَرَةٌ", latin: "Syajaratun", arti: "Pohon", kategori: "Alam" },
+            { arab: "زَهْرَةٌ", latin: "Zahratun", arti: "Bunga", kategori: "Alam" },
+            { arab: "سَمَاءٌ", latin: "Sama'un", arti: "Langit", kategori: "Alam" },
+            { arab: "أَرْضٌ", latin: "Ardhun", arti: "Bumi", kategori: "Alam" },
+            { arab: "شَمْسٌ", latin: "Syamsun", arti: "Matahari", kategori: "Alam" },
+            { arab: "قَمَرٌ", latin: "Qamarun", arti: "Bulan", kategori: "Alam" },
+            { arab: "نَجْمٌ", latin: "Najmun", arti: "Bintang", kategori: "Alam" },
+            { arab: "غَابَةٌ", latin: "Ghabatun", arti: "Hutan", kategori: "Alam" },
+            { arab: "هَوَاءٌ", latin: "Hawa'un", arti: "Udara", kategori: "Alam" },
+            { arab: "بَدِيعٌ", latin: "Badi'un", arti: "Indah / Menakjubkan", kategori: "Sifat" }
+        ],
+        hiwar: [
+            { pembicara: "Faisal", arab: "يَا حَسَنُ، انْظُرْ إِلَى هَذِهِ الطَّبِيعَةِ الخَلَّابَةِ!", indo: "Wahai Hasan, lihatlah ke alam yang mempesona ini!" },
+            { pembicara: "Hasan", arab: "مَا شَاءَ اللهُ! الجِبَالُ عَالِيَةٌ وَالأَنْهَارُ جَارِيَةٌ.", indo: "Masya Allah! Gunung-gunung tinggi dan sungai-sungai mengalir." },
+            { pembicara: "Faisal", arab: "وَمَا لَوْنُ السَّمَاءِ وَالأَرْضِ؟", indo: "Dan apa warna langit dan bumi?" },
+            { pembicara: "Hasan", arab: "السَّمَاءُ صَافِيَةٌ زَرْقَاءُ، وَالأَرْضُ خَضْرَاءُ بِالشَّجَرِ.", indo: "Langit bersih biru, dan bumi hijau dengan pepohonan." },
+            { pembicara: "Faisal", arab: "هَلْ تُحِبُّ الرِّحْلَةَ إِلَى الغَابَةِ؟", indo: "Apakah kamu suka perjalanan ke hutan?" },
+            { pembicara: "Hasan", arab: "نَعَمْ، أُحِبُّ الطَّبِيعَةَ وَأَسْتَمْتِعُ بِهَوَاءِ الغَابَةِ النَّقِيِّ.", indo: "Ya, aku menyukai alam dan menikmati udara hutan yang bersih." },
+            { pembicara: "Faisal", arab: "مَنْ خَلَقَ هَذَا الكَوْنَ الجَمِيلَ؟", indo: "Siapa yang menciptakan alam semesta yang indah ini?" },
+            { pembicara: "Hasan", arab: "خَلَقَهُ اللهُ تَعَالَى الخَالِقُ العَظِيمُ.", indo: "Allah Ta'ala pencipta yang Maha Agung menciptakannya." },
+            { pembicara: "Faisal", arab: "فَعَلَيْنَا أَنْ نَحْفَظَ هَذِهِ البِيئَةَ.", indo: "Maka kita wajib menjaga lingkungan ini." },
+            { pembicara: "Hasan", arab: "صَحِيحٌ، الحِفَاظُ عَلَى البِيئَةِ وَاجِبٌ دِينِيٌّ وَوَطَنِيٌّ.", indo: "Benar, menjaga lingkungan adalah kewajiban agama dan nasional." }
+        ],
+        bacaan: [
+            { arab: "الطَّبِيعَةُ فِي بِلَادِنَا جَمِيلَةٌ جِدًّا وَغَنِيَّةٌ بِالمَنَاظِرِ الخَلَّابَةِ.", indo: "Alam di negeri kita sangat indah dan kaya dengan pemandangan menawan." },
+            { arab: "نَرَى الجِبَالَ العَالِيَةَ تُرَاقِبُ الوَدْيَانَ الخَضْرَاءَ.", indo: "Kita melihat gunung-gunung tinggi mengawasi lembah-lembah hijau." },
+            { arab: "وَتَجْرِي الأَنْهَارُ الصَّافِيَةُ بَيْنَ الأَشْجَارِ المُثْمِرَةِ.", indo: "Dan sungai-sungai jernih mengalir di antara pohon-pohon yang berbuah." },
+            { arab: "وَفِي السَّمَاءِ تَسْطَعُ الشَّمْسُ صَبَاحًا وَيُنِيرُ القَمَرُ لَيْلًا.", indo: "Dan di langit matahari bersinar di pagi hari dan bulan menerangi di malam hari." },
+            { arab: "وَتُزَيِّنُ النُّجُومُ اللَّامِعَةُ سَمَاءَ الليلِ الدَّاجِي.", indo: "Dan bintang-bintang gemilang menghiasi langit malam yang gelap." },
+            { arab: "وَتَتَنَوَّعُ الأَزْهَارُ وَالأَعْشَابُ عَلَى الأَرْضِ الوَاسِعَةِ.", indo: "Bunga-bunga dan rerumputan bermacam-macam di atas bumi yang luas." },
+            { arab: "هَذَا الجَمَالُ البَدِيعُ يَدُلُّ عَلَى قُدْرَةِ الخَالِقِ عَزَّ وَجَلَّ.", indo: "Keindahan yang menakjubkan ini menunjukkan kekuasaan Sang Pencipta 'Azza wa Jalla." },
+            { arab: "يَخْرُجُ النَّاسُ إِلَى الحَدَائِقِ وَالغَابَاتِ لِلتَّنَزُّهِ وَالتَّفَكُّرِ.", indo: "Manusia keluar ke taman-taman dan hutan untuk rekreasi dan merenung." },
+            { arab: "وَيَجِبُ عَلَيْنَا شُكْرُ اللهِ عَلَى هَذِهِ النِّعَمِ العَظِيمَةِ.", indo: "Dan wajib atas kita mensyukuri Allah atas nikmat-nikmat yang besar ini." },
+            { arab: "وَعَدَمُ تَلْوِيثِ البِيئَةِ لِتَبْقَى طَبِيعَتُنَا نَظِيفَةً جَمِيلَةً.", indo: "Serta tidak mencemari lingkungan agar alam kita tetap bersih dan indah." }
+        ],
+        latihan: [
+            { pertanyaan: "Apa arti dari 'Thabi'atun' (طَبِيعَةٌ)?", opsi: ["Alam", "Kota", "Rumah", "Sekolah"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Gunung' ke Bahasa Arab:", opsi: ["Jabalun", "Nahrun", "Bahrun", "Syajaratun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Nahrun' (نَهْرٌ)?", opsi: ["Sungai", "Laut", "Gunung", "Danau"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Pohon' ke Bahasa Arab:", opsi: ["Syajaratun", "Zahratun", "Sama'un", "Ardhun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Sama'un' (سَمَاءٌ)?", opsi: ["Langit", "Bumi", "Matahari", "Bulan"], jawaban: 0 },
+            { pertanyaan: "Apa warna langit dan bumi dalam hiwar?", opsi: ["Langit biru, bumi hijau", "Langit merah, bumi hitam", "Langit kuning, bumi putih", "Langit hijau, bumi biru"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Matahari' ke Bahasa Arab:", opsi: ["Syamsun", "Qamarun", "Najmun", "Hawa'un"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Qamarun' (قَمَرٌ)?", opsi: ["Bulan", "Bintang", "Matahari", "Awan"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Hutan' ke Bahasa Arab:", opsi: ["Ghabatun", "Jabalun", "Nahrun", "Ardhun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Badi'un' (بَدِيعٌ)?", opsi: ["Indah / Menakjubkan", "Buruk", "Kotor", "Sempit"], jawaban: 0 },
+            { pertanyaan: "Apa yang ditunjukkan oleh keindahan alam semesta?", opsi: ["Kekuasaan Sang Pencipta (Allah)", "Kebetulan", "Kekuatan manusia", "Keajaiban teknologi"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Bunga' ke Bahasa Arab:", opsi: ["Zahratun", "Syajaratun", "Ghabatun", "Hawa'un"], jawaban: 0 },
+            { pertanyaan: "Mengapa manusia pergi ke taman dan hutan?", opsi: ["Untuk rekreasi dan merenung", "Untuk merusak", "Untuk membuang sampah", "Untuk membakar pohon"], jawaban: 0 },
+            { pertanyaan: "Apa kewajiban kita terhadap alam?", opsi: ["Menjaga kebersihan dan tidak merusaknya", "Mencemarinya", "Membiarkannya kotor", "Menebang semua pohon"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Hawa'un' (هَوَاءٌ)?", opsi: ["Udara", "Air", "Tanah", "Api"], jawaban: 0 }
+        ],
+        game: [
+            { kata: ["الطَّبِيعَةُ", "فِي", "بِلَادِنَا", "جَمِيلَةٌ", "جِدًّا"], arti: "Alam di negeri kita sangat indah" },
+            { kata: ["الجِبَالُ", "عَالِيَةٌ", "وَالأَنْهَارُ", "جَارِيَةٌ"], arti: "Gunung-gunung tinggi dan sungai-sungai mengalir" },
+            { kata: ["السَّمَاءُ", "صَافِيَةٌ", "زَرْقَاءُ", "صَبَاحًا"], arti: "Langit bersih biru di pagi hari" },
+            { kata: ["الشَّمْسُ", "تَسْطَعُ", "وَالقَمَرُ", "يُنِيرُ"], arti: "Matahari bersinar dan bulan menerangi" },
+            { kata: ["هَذَا", "الجَمَالُ", "يَدُلُّ", "عَلَى", "قُدْرَةِ", "اللهِ"], arti: "Keindahan ini menunjukkan kekuasaan Allah" },
+            { kata: ["نَحْنُ", "نُحِبُّ", "الطَّبِيعَةَ", "النَّظِيفَةَ"], arti: "Kami menyukai alam yang bersih" },
+            { kata: ["نَسْتَمْتِعُ", "بِهَوَاءِ", "الغَابَةِ", "النَّقِيِّ"], arti: "Kami menikmati udara hutan yang bersih" },
+            { kata: ["يَخْرُجُ", "النَّاسُ", "إِلَى", "الحَدَائِقِ"], arti: "Manusia keluar ke taman-taman" },
+            { kata: ["يَجِبُ", "عَلَيْنَا", "شُكْرُ", "اللهِ", "عَلَى", "النِّعَمِ"], arti: "Wajib atas kita mensyukuri Allah atas nikmat" },
+            { kata: ["الحِفَاظُ", "عَلَى", "البِيئَةِ", "وَاجِبٌ", "دِينِيٌّ"], arti: "Menjaga lingkungan adalah kewajiban agama" }
+        ]
+    },
+    {
+        id: "k9-b5",
+        kelas: "KELAS IX",
+        judulArab: "خَالِقُ الْعَالَمِ",
+        judulLatin: "Khaliqul 'Alam (Pencipta Alam Semesta)",
+        kosakata: [
+            { arab: "خَالِقٌ", latin: "Khaliqun", arti: "Pencipta", kategori: "Sifat" },
+            { arab: "عَالَمٌ", latin: "Alamun", arti: "Alam semesta", kategori: "Alam" },
+            { arab: "قُدْرَةٌ", latin: "Qudratun", arti: "Kekuasaan / Kemampuan", kategori: "Sifat" },
+            { arab: "عَظِيمٌ", latin: "Azhiimun", arti: "Agung", kategori: "Sifat" },
+            { arab: "رَحْمَةٌ", latin: "Rahmatun", arti: "Rahmat / Kasih sayang", kategori: "Sifat" },
+            { arab: "نِعْمَةٌ", latin: "Ni'matun", arti: "Nikmat / Anugerah", kategori: "Umum" },
+            { arab: "شُكْرٌ", latin: "Syukrun", arti: "Syukur / Terima kasih", kategori: "Umum" },
+            { arab: "آيَةٌ", latin: "Ayatun", arti: "Ayat / Tanda kekuasaan", kategori: "Umum" },
+            { arab: "كَوْنٌ", latin: "Kawnun", arti: "Semesta", kategori: "Alam" },
+            { arab: "مَخْلُوقٌ", latin: "Makhlukun", arti: "Makhluk ciptaan", kategori: "Umum" },
+            { arab: "إِيمَانٌ", latin: "Imanun", arti: "Iman / Keyakinan", kategori: "Ibadah" },
+            { arab: "تَفَكُّرٌ", latin: "Tafakkurun", arti: "Perenungan / Berpikir", kategori: "Ibadah" },
+            { arab: "حَكِيمٌ", latin: "Hakiimun", arti: "Maha Bijaksana", kategori: "Sifat" },
+            { arab: "رَزَّاقٌ", latin: "Razzaqun", arti: "Maha Pemberi Rezeki", kategori: "Sifat" },
+            { arab: "عَبْدٌ", latin: "Abdun", arti: "Hamba", kategori: "Umum" }
+        ],
+        hiwar: [
+            { pembicara: "Taufiq", arab: "يَا أُسْتَاذُ، لِمَاذَا خَلَقَ اللهُ هَذَا الكَوْنَ العَظِيمَ؟", indo: "Wahai Pak Guru, mengapa Allah menciptakan alam semesta yang agung ini?" },
+            { pembicara: "Ustaz", arab: "خَلَقَهُ اللهُ لِيَدُلَّ عَلَى قُدْرَتِهِ وَعَظَمَتِهِ لِعِبَادِهِ.", indo: "Allah menciptakannya untuk menunjukkan kekuasaan dan keagungan-Nya kepada hamba-hamba-Nya." },
+            { pembicara: "Taufiq", arab: "وَمَاذَا يَجِبُ عَلَيْنَا نَحْنُ المَخْلُوقَاتِ؟", indo: "Dan apa yang wajib atas kita sebagai makhluk?" },
+            { pembicara: "Ustaz", arab: "يَجِبُ عَلَيْنَا الإِيمَانُ بِهِ وَشُكْرُهُ عَلَى نِعَمِهِ العَظِيمَةِ.", indo: "Wajib atas kita beriman kepada-Nya dan mensyukuri nikmat-nikmat-Nya yang besar." },
+            { pembicara: "Taufiq", arab: "كَيْفَ نَتَفَكَّرُ فِي خَلْقِ السَّمَاوَاتِ وَالأَرْضِ؟", indo: "Bagaimana kita merenungkan penciptaan langit dan bumi?" },
+            { pembicara: "Ustaz", arab: "بِالنَّظَرِ فِي عَجَائِبِ المَخْلُوقَاتِ وَاسْتِعْمَالِ العُقُولِ.", indo: "Dengan melihat keajaiban makhluk-makhluk dan menggunakan akal." },
+            { pembicara: "Taufiq", arab: "هَلْ لِكُلِّ شَيْءٍ خَالِقٌ حَكِيمٌ؟", indo: "Apakah segala sesuatu memiliki pencipta yang bijaksana?" },
+            { pembicara: "Ustaz", arab: "نَعَمْ، اللهُ الخَالِقُ البَارِئُ المُصَوِّرُ لَا شَرِيكَ لَهُ.", indo: "Ya, Allah adalah Sang Pencipta, Sang Pemula, Sang Pembentuk, tiada sekutu bagi-Nya." },
+            { pembicara: "Taufiq", arab: "فَنَحْنُ عِبَادُ اللهِ المُخْلِصُونَ.", indo: "Maka kita adalah hamba-hamba Allah yang ikhlas." },
+            { pembicara: "Ustaz", arab: "نَعَمْ، نَعْبُدُهُ وَحْدَهُ وَنَسْتَعِينُ بِهِ فِي كُلِّ أَمْرٍ.", indo: "Ya, kita menyembah-Nya semata dan memohon pertolongan kepada-Nya dalam setiap urusan." }
+        ],
+        bacaan: [
+            { arab: "اللهُ تَعَالَى هُوَ خَالِقُ الكَوْنِ وَرَبُّ العَالَمِينَ جَمِيعًا.", indo: "Allah Ta'ala adalah pencipta alam semesta dan Rabb seluruh alam semesta." },
+            { arab: "خَلَقَ السَّمَاوَاتِ وَالأَرْضَ وَمَا بَيْنَهُمَا بِالحَقِّ وَالحِكْمَةِ.", indo: "Dia menciptakan langit dan bumi serta apa yang di antara keduanya dengan hak dan hikmah." },
+            { arab: "لَا شَرِيكَ لَهُ فِي مُلْكِهِ وَلَا وَزِيرَ لَهُ فِي خَلْقِهِ.", indo: "Tiada sekutu bagi-Nya dalam kerajaan-Nya dan tiada penasihat bagi-Nya dalam penciptaan-Nya." },
+            { arab: "كُلُّ شَيْءٍ فِي هَذَا العَالَمِ يَدُلُّ عَلَى وَحْدَانِيَّةِ اللهِ.", indo: "Setiap sesuatu di alam ini menunjukkan keesaan Allah." },
+            { arab: "الشَّمْسُ وَالقَمَرُ وَالنُّجُومُ تَجْرِي بِأَمْرِهِ وَتَسْبِيحِهِ.", indo: "Matahari, bulan, dan bintang beredar dengan perintah-Nya dan tasbih-Nya." },
+            { arab: "وَالأَرْضُ فَرَاشٌ لَنَا فِيهَا الأَنْهَارُ وَالثِّمَارُ وَالنَّبَاتَاتُ.", indo: "Dan bumi adalah hamparan bagi kita, di dalamnya terdapat sungai, buah-buahan, dan tanaman." },
+            { arab: "يَجِبُ عَلَى الإِنْسَانِ أَنْ يَتَفَكَّرَ فِي آيَاتِ اللهِ الكَوْنِيَّةِ.", indo: "Wajib atas manusia untuk merenungkan ayat-ayat kauniyah Allah." },
+            { arab: "وَيَشْكُرَ نِعَمَهُ الكَثِيرَةَ التَّي لَا تُحْصَى وَلَا تُعَدُّ.", indo: "Dan mensyukuri nikmat-nikmat-Nya yang banyak yang tidak terhitung dan tidak terhingga." },
+            { arab: "المُؤْمِنُ الحَقُّ يَعْبُدُ اللهَ مُخْلِصًا لَهُ الدِّينَ.", indo: "Mukmin sejati menyembah Allah dengan mengikhlaskan ketaatan kepada-Nya." },
+            { arab: "فَهُوَ السَّمِيعُ البَصِيرُ العَلِيمُ بِذَاتِ الصُّدُورِ.", indo: "Maka Dia Maha Mendengar, Maha Melihat, lagi Maha Mengetahui isi hati." }
+        ],
+        latihan: [
+            { pertanyaan: "Apa arti dari 'Khaliqun' (خَالِقٌ)?", opsi: ["Pencipta", "Makhluk", "Hamba", "Dunia"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Alam semesta' ke Bahasa Arab:", opsi: ["Alamun", "Khaliqun", "Ardhun", "Sama'un"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Qudratun' (قُدْرَةٌ)?", opsi: ["Kekuasaan / Kemampuan", "Kelemahan", "Kebodohan", "Kemalasan"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Agung' ke Bahasa Arab:", opsi: ["Azhiimun", "Hakiimun", "Razzaqun", "Saghirun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Ni'matun' (نِعْمَةٌ)?", opsi: ["Nikmat / Anugerah", "Bencana", "Kesusahan", "Hukuman"], jawaban: 0 },
+            { pertanyaan: "Mengapa Allah menciptakan alam semesta menurut hiwar?", opsi: ["Untuk menunjukkan kekuasaan dan keagungan-Nya", "Untuk bermain-main", "Tanpa tujuan", "Hanya sementara"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Ayat / Tanda' ke Bahasa Arab:", opsi: ["Ayatun", "Kitabun", "Kalimatun", "Harfun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Tafakkurun' (تَفَكُّرٌ)?", opsi: ["Perenungan / Berpikir", "Bermain", "Tidur", "Lupa"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Maha Bijaksana' ke Bahasa Arab:", opsi: ["Hakiimun", "Razzaqun", "Azhiimun", "Khaliqun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Razzaqun' (رَزَّاقٌ)?", opsi: ["Maha Pemberi Rezeki", "Maha Mematikan", "Maha Menghukum", "Maha Melihat"], jawaban: 0 },
+            { pertanyaan: "Siapa yang menciptakan langit dan bumi tanpa sekutu?", opsi: ["Allah Ta'ala", "Manusia", "Malaikat", "Alam sendiri"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Hamba' ke Bahasa Arab:", opsi: ["Abdun", "Khaliqun", "Malikun", "Rasulun"], jawaban: 0 },
+            { pertanyaan: "Bagaimana cara kita merenungkan penciptaan langit dan bumi?", opsi: ["Melihat keajaiban makhluk dan menggunakan akal", "Mengabaikannya", "Merusaknya", "Mengingkarinya"], jawaban: 0 },
+            { pertanyaan: "Apa kewajiban manusia terhadap nikmat Allah?", opsi: ["Mensyukurinya dan beriman kepada-Nya", "Mengingkarinya", "Menyia-nyiakannya", "Merusaknya"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Makhlukun' (مَخْلُوقٌ)?", opsi: ["Makhluk ciptaan", "Pencipta", "Tuhan", "Malaikat"], jawaban: 0 }
+        ],
+        game: [
+            { kata: ["اللهُ", "تَعَالَى", "هُوَ", "خَالِقُ", "الكَوْنِ"], arti: "Allah Ta'ala adalah pencipta alam semesta" },
+            { kata: ["خَلَقَ", "السَّمَاوَاتِ", "وَالأَرْضَ", "بِالحَقِّ"], arti: "Dia menciptakan langit dan bumi dengan hak" },
+            { kata: ["كُلُّ", "شَيْءٍ", "يَدُلُّ", "عَلَى", "وَحْدَانِيَّةِ", "اللهِ"], arti: "Setiap sesuatu menunjukkan keesaan Allah" },
+            { kata: ["الشَّمْسُ", "وَالقَمَرُ", "تَجْرِي", "بِأَمْرِهِ"], arti: "Matahari dan bulan beredar dengan perintah-Nya" },
+            { kata: ["يَجِبُ", "عَلَى", "الإِنْسَانِ", "شُكْرُ", "النِّعَمِ"], arti: "Wajib atas manusia mensyukuri nikmat" },
+            { kata: ["المُؤْمِنُ", "يَتَفَكَّرُ", "فِي", "خَلْقِ", "السَّمَاوَاتِ"], arti: "Orang mukmin merenungkan penciptaan langit" },
+            { kata: ["اللهُ", "سَمِيعٌ", "بَصِيرٌ", "عَلِيمٌ"], arti: "Allah Maha Mendengar, Maha Melihat, Maha Mengetahui" },
+            { kata: ["نَحْنُ", "نَعْبُدُ", "اللهَ", "مُخْلِصِينَ"], arti: "Kami menyembah Allah dengan ikhlas" },
+            { kata: ["الحَمْدُ", "للهِ", "رَبِّ", "العَالَمِينَ"], arti: "Segala puji bagi Allah Rabb semesta alam" },
+            { kata: ["قُدْرَةُ", "اللهِ", "ظَاهِرَةٌ", "فِي", "المَخْلُوقَاتِ"], arti: "Kekuasaan Allah tampak nyata pada makhluk-makhluk" }
+        ]
+    },
+    {
+        id: "k9-b6",
+        kelas: "KELAS IX",
+        judulArab: "الْحِفَاظُ عَلَى الْبِيْئَةِ",
+        judulLatin: "Al-Hifazh 'alal Bi'ah (Menjaga Lingkungan)",
+        kosakata: [
+            { arab: "بِيئَةٌ", latin: "Bi'atun", arti: "Lingkungan", kategori: "Lingkungan" },
+            { arab: "حِفَاظٌ", latin: "Hifazhun", arti: "Penjagaan / Pelestarian", kategori: "Lingkungan" },
+            { arab: "نَظَافَةٌ", latin: "Nazhafatun", arti: "Kebersihan", kategori: "Lingkungan" },
+            { arab: "قَذَارَةٌ", latin: "Qazharatun", arti: "Kotoran / Sampah", kategori: "Lingkungan" },
+            { arab: "نَفَايَاتٌ", latin: "Nafayatun", arti: "Limbah / Sampah", kategori: "Lingkungan" },
+            { arab: "تَلْوِيثٌ", latin: "Talwiithun", arti: "Pencemaran / Polusi", kategori: "Lingkungan" },
+            { arab: "شَجَرَةٌ", latin: "Syajaratun", arti: "Pohon", kategori: "Alam" },
+            { arab: "غَرْسٌ", latin: "Gharsun", arti: "Penanaman", kategori: "Alam" },
+            { arab: "مَاءٌ", latin: "Ma'un", arti: "Air", kategori: "Alam" },
+            { arab: "هَوَاءٌ", latin: "Hawa'un", arti: "Udara", kategori: "Alam" },
+            { arab: "صِحَّةٌ", latin: "Shihhatun", arti: "Kesehatan", kategori: "Kesehatan" },
+            { arab: "مَرَضٌ", latin: "Maradhun", arti: "Penyakit", kategori: "Kesehatan" },
+            { arab: "حَدِيقَةٌ", latin: "Hadiqatun", arti: "Taman", kategori: "Lingkungan" },
+            { arab: "مَسْؤُولِيَّةٌ", latin: "Mas'uliyatun", arti: "Tanggung jawab", kategori: "Umum" },
+            { arab: "نَافِعٌ", latin: "Nafi'un", arti: "Bermanfaat", kategori: "Sifat" }
+        ],
+        hiwar: [
+            { pembicara: "Nabil", arab: "يَا بَشِيرُ، لِمَاذَا نَرَى القَذَارَاتِ فِي الشَّوَارِعِ؟", indo: "Wahai Basyir, mengapa kita melihat kotoran di jalan-jalan?" },
+            { pembicara: "Basyir", arab: "لِأَنَّ بَعْضَ النَّاسِ يَرْمُونَ النَّفَايَاتِ فِي غَيْرِ أَمْكِنَتِهَا.", indo: "Karena sebagian orang membuang sampah bukan pada tempatnya." },
+            { pembicara: "Nabil", arab: "هَذَا يُؤَدِّي إِلَى تَلْوِيثِ البِيئَةِ وَانْتِشَارِ الأَمْرَاضِ.", indo: "Ini berakibat pada pencemaran lingkungan dan tersebarnya penyakit." },
+            { pembicara: "Basyir", arab: "صَحِيحٌ جِدًّا. فَالنَّظَافَةُ مِنَ الإِيمَانِ.", indo: "Benar sekali. Kebersihan adalah sebagian dari iman." },
+            { pembicara: "Nabil", arab: "فَمَاذَا نَفْعَلُ لِلْحِفَاظِ عَلَى بِيئَتِنَا؟", indo: "Lalu apa yang kita lakukan untuk menjaga lingkungan kita?" },
+            { pembicara: "Basyir", arab: "نَغْرِسُ الأَشْجَارَ وَنُنَظِّفُ المَدَارِسَ وَالشَّوَارِعَ كُلَّ يَوْمٍ.", indo: "Kita menanam pohon-pohon dan membersihkan sekolah serta jalan setiap hari." },
+            { pembicara: "Nabil", arab: "هَلْ غَرْسُ الأَشْجَارِ مُفِيدٌ لِلْهَوَاءِ؟", indo: "Apakah menanam pohon bermanfaat bagi udara?" },
+            { pembicara: "Basyir", arab: "نَعَمْ، الأَشْجَارُ تُنَقِّي الهَوَاءَ وَتُعْطِي البِيئَةَ جَمَالًا.", indo: "Ya, pohon-pohon menyucikan udara dan memberikan keindahan pada lingkungan." },
+            { pembicara: "Nabil", arab: "إِذًا، حِفَاظُ البِيئَةِ مَسْؤُولِيَّةُ الجَمِيعِ.", indo: "Kalau begitu, menjaga lingkungan adalah tanggung jawab bersama." },
+            { pembicara: "Basyir", arab: "بِالتَّأْكِيدِ، لِنَعْمَلْ مَعًا لِتَنْظِيفِ وَطَنِنَا.", indo: "Tentu, mari kita bekerja sama untuk membersihkan negeri kita." }
+        ],
+        bacaan: [
+            { arab: "البِيئَةُ النَّظِيفَةُ ضَرُورَةٌ أَسَاسِيَّةٌ لِحَيَاةٍ صِحِّيَّةٍ سَلِيمَةٍ.", indo: "Lingkungan yang bersih adalah kebutuhan mendasar bagi kehidupan yang sehat dan selamat." },
+            { arab: "وَيَجِبُ عَلَى كُلِّ فَرْدٍ فِي المُجْتَمَعِ الحِفَاظُ عَلَيْهَا.", indo: "Dan wajib atas setiap individu di masyarakat untuk menjaganya." },
+            { arab: "إِنَّ تَلْوِيثَ البِيئَةِ يَتَسَبَّبُ فِي أَمْرَاضٍ خَطِيرَةٍ لِلْإِنْسَانِ.", indo: "Sesungguhnya pencemaran lingkungan menyebabkan penyakit-penyakit berbahaya bagi manusia." },
+            { arab: "مِثْلُ تَلْوِيثِ الهَوَاءِ بِالدُّخَانِ وَتَلْوِيثِ المَاءِ بِالنَّفَايَاتِ.", indo: "Seperti pencemaran udara dengan asap dan pencemaran air dengan limbah." },
+            { arab: "لِذَلِكَ حَثَّنَا الإِسْلَامُ عَلَى النَّظَافَةِ فِي كُلِّ أَمْرٍ.", indo: "Oleh karena itu Islam menganjurkan kita pada kebersihan dalam setiap urusan." },
+            { arab: "وَمِنْ وَسَائِلِ الحِفَاظِ عَلَى البِيئَةِ غَرْسُ الأَشْجَارِ وَالنَّبَاتَاتِ.", indo: "Dan di antara sarana menjaga lingkungan adalah menanam pohon dan tanaman." },
+            { arab: "الأَشْجَارُ تُعْطِي الأُكْسِجِينَ النَّقِيَّ وَتَحْمِي الأَرْضَ مِنَ التَّآكُلِ.", indo: "Pohon-pohon memberikan oksigen yang bersih dan melindungi bumi dari abrasi." },
+            { arab: "وَيَنْبَغِي وَضْعُ القُمَامَةِ فِي الأَمَاكِنِ المُخَصَّصَةِ لَهَا.", indo: "Dan sepatutnya meletakkan sampah di tempat-tempat yang dikhususkan untuknya." },
+            { arab: "فَالْبِيئَةُ النَّظِيفَةُ تَعْكِسُ أَخْلَاقَ المُسْلِمِ الحَقِّ.", indo: "Maka lingkungan yang bersih mencerminkan akhlak seorang Muslim sejati." },
+            { arab: "لِنَتَعَاوَنْ جَمِيعًا لِجَعْلِ بِيئَتِنَا جَمِيلَةً نَظِيفَةً خَالِيَةً مِنَ التَّلَوُّثِ.", indo: "Mari kita bekerja sama seluruhnya untuk menjadikan lingkungan kita indah, bersih, dan bebas dari polusi." }
+        ],
+        latihan: [
+            { pertanyaan: "Apa arti dari 'Bi'atun' (بِيئَةٌ)?", opsi: ["Lingkungan", "Sekolah", "Rumah", "Pasar"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Kebersihan' ke Bahasa Arab:", opsi: ["Nazhafatun", "Qazharatun", "Talwiithun", "Hifazhun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Talwiithun' (تَلْوِيثٌ)?", opsi: ["Pencemaran / Polusi", "Kebersihan", "Keindahan", "Kesehatan"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Sampah / Limbah' ke Bahasa Arab:", opsi: ["Nafayatun", "Syajaratun", "Ma'un", "Hawa'un"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Gharsun' (غَرْسٌ)?", opsi: ["Penanaman pohon", "Pembuangan sampah", "Pencemaran", "Pembersihan"], jawaban: 0 },
+            { pertanyaan: "Apa penyebab pencemaran lingkungan menurut hiwar?", opsi: ["Membuang sampah bukan pada tempatnya", "Menanam pohon", "Menjaga kebersihan", "Menyiram tanaman"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Kesehatan' ke Bahasa Arab:", opsi: ["Shihhatun", "Maradhun", "Nazhafatun", "Bi'atun"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Maradhun' (مَرَضٌ)?", opsi: ["Penyakit", "Sehat", "Obat", "Dokter"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Tanggung jawab' ke Bahasa Arab:", opsi: ["Mas'uliyatun", "Hifazhun", "Nazhafatun", "Nafi'un"], jawaban: 0 },
+            { pertanyaan: "Apa manfaat pohon bagi lingkungan menurut bacaan?", opsi: ["Memberikan oksigen bersih dan melindungi bumi", "Membuat kotor", "Menyebarkan polusi", "Menambah sampah"], jawaban: 0 },
+            { pertanyaan: "Bagaimana pandangan Islam terhadap kebersihan?", opsi: ["Islam sangat menganjurkan kebersihan", "Kebersihan tidak penting", "Biasa saja", "Dilarang"], jawaban: 0 },
+            { pertanyaan: "Terjemahkan 'Udara' ke Bahasa Arab:", opsi: ["Hawa'un", "Ma'un", "Ardhun", "Sama'un"], jawaban: 0 },
+            { pertanyaan: "Di mana seharusnya kita membuang sampah?", opsi: ["Di tempat sampah yang dikhususkan", "Di jalan", "Di sungai", "Di lantai kelas"], jawaban: 0 },
+            { pertanyaan: "Siapa yang bertanggung jawab menjaga lingkungan?", opsi: ["Semua individu (masyarakat)", "Hanya pemerintah", "Hanya siswa", "Tidak ada"], jawaban: 0 },
+            { pertanyaan: "Apa arti dari 'Nafi'un' (نَافِعٌ)?", opsi: ["Bermanfaat", "Berbahaya", "Kotor", "Buruk"], jawaban: 0 }
+        ],
+        game: [
+            { kata: ["البِيئَةُ", "النَّظِيفَةُ", "ضَرُورَةٌ", "أَسَاسِيَّةٌ"], arti: "Lingkungan yang bersih adalah kebutuhan mendasar" },
+            { kata: ["تَلْوِيثُ", "البِيئَةِ", "يَتَسَبَّبُ", "فِي", "الأَمْرَاضِ"], arti: "Pencemaran lingkungan menyebabkan penyakit" },
+            { kata: ["الحِفَاظُ", "عَلَى", "البِيئَةِ", "مَسْؤُولِيَّةُ", "الجَمِيعِ"], arti: "Menjaga lingkungan adalah tanggung jawab bersama" },
+            { kata: ["نَغْرِسُ", "الأَشْجَارَ", "لِتَنْقِيَةِ", "الهَوَاءِ"], arti: "Kami menanam pohon-pohon untuk menyucikan udara" },
+            { kata: ["النَّظَافَةُ", "مِنَ", "الإِيمَانِ", "فِي", "الإِسْلَامِ"], arti: "Kebersihan adalah sebagian dari iman dalam Islam" },
+            { kata: ["يَنْبَغِي", "وَضْعُ", "القَمَامَةِ", "فِي", "أَمْكِنَتِهَا"], arti: "Sepatutnya meletakkan sampah di tempatnya" },
+            { kata: ["الأَشْجَارُ", "تَحْمِي", "الأَرْضَ", "مِنَ", "التَّآكُلِ"], arti: "Pohon-pohon melindungi bumi dari abrasi" },
+            { kata: ["نَحْنُ", "نُحِبُّ", "البِيئَةَ", "النَّظِيفَةَ", "الخَالِيَةَ"], arti: "Kami menyukai lingkungan yang bersih dan kosong" },
+            { kata: ["لِنَتَعَاوَنْ", "جَمِيعًا", "عَلَى", "تَنْظِيفِ", "الوَطَنِ"], arti: "Mari kita bekerja sama membersihkan negeri" },
+            { kata: ["الحَمْدُ", "للهِ", "عَلَى", "نِعْمَةِ", "الصِّحَّةِ", "وَالبِيئَةِ"], arti: "Segala puji bagi Allah atas nikmat kesehatan dan lingkungan" }
+        ]
+    }
+];
+
+const semuaMateri = [...dataKelas7, ...dataKelas8, ...dataKelas9];
+
+let activeBabId = "k7-b1";
+let activeTab = "kosakata";
+let showTranslation = true;
+let quizState = {};
+let gameState = { index: 0, selectedWords: [], availableWords: [], status: "" };
+
+function initApp() {
+    renderSidebar();
+    selectBab(activeBabId);
+}
+
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("show");
+}
+
+function renderSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const groups = [
+        { title: "KELAS VII", items: dataKelas7 },
+        { title: "KELAS VIII", items: dataKelas8 },
+        { title: "KELAS IX", items: dataKelas9 }
+    ];
+
+    sidebar.innerHTML = groups.map((group, idx) => {
+        const isOpen = group.items.some(b => b.id === activeBabId) || idx === 0;
+        return `
+            <div class="kelas-group ${isOpen ? 'open' : ''}" id="group-${idx}">
+                <button class="kelas-btn" onclick="toggleGroup(${idx})">
+                    <span>${group.title} (${group.items.length} Bab)</span>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="bab-list">
+                    ${group.items.map(bab => `
+                        <button class="bab-item ${bab.id === activeBabId ? 'active' : ''}" onclick="selectBab('${bab.id}')">
+                            <span class="bab-arab">${bab.judulArab}</span>
+                            <span class="bab-latin">${bab.judulLatin}</span>
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function toggleGroup(idx) {
+    const groupEl = document.getElementById(`group-${idx}`);
+    if (groupEl) {
+        groupEl.classList.toggle("open");
+    }
+}
+
+function selectBab(babId) {
+    activeBabId = babId;
+    activeTab = "kosakata";
+    quizState = {};
+    resetGame(0);
+    renderSidebar();
+    renderMain();
+    if (window.innerWidth <= 860) {
+        document.getElementById("sidebar").classList.remove("show");
+    }
+}
+
+function setTab(tabName) {
+    activeTab = tabName;
+    if (tabName === "game") {
+        resetGame(0);
+    }
+    renderMain();
+}
+
+function speakArabic(text) {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'ar-SA';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+    } else {
+        alert("Browser Anda belum mendukung fitur suara otomatis.");
+    }
+}
+
+function renderMain() {
+    const bab = semuaMateri.find(b => b.id === activeBabId) || semuaMateri[0];
+    const main = document.getElementById("main-content");
+
+    const headerHTML = `
+        <div class="chapter-header">
+            <div>
+                <span class="badge-kelas">${bab.kelas}</span>
+                <h2 class="chapter-title-latin">${bab.judulLatin}</h2>
+            </div>
+            <div class="chapter-title-arab">${bab.judulArab}</div>
+        </div>
+        <div class="tabs">
+            <button class="tab-btn ${activeTab === 'kosakata' ? 'active' : ''}" onclick="setTab('kosakata')">📚 Kosakata (${bab.kosakata.length})</button>
+            <button class="tab-btn ${activeTab === 'hiwar' ? 'active' : ''}" onclick="setTab('hiwar')">💬 Hiwar (${bab.hiwar.length})</button>
+            <button class="tab-btn ${activeTab === 'bacaan' ? 'active' : ''}" onclick="setTab('bacaan')">📖 Qira'ah (${bab.bacaan.length})</button>
+            <button class="tab-btn ${activeTab === 'latihan' ? 'active' : ''}" onclick="setTab('latihan')">📝 Latihan (${bab.latihan.length})</button>
+            <button class="tab-btn ${activeTab === 'game' ? 'active' : ''}" onclick="setTab('game')">🎮 Game Susun Kalimat</button>
+        </div>
+    `;
+
+    let bodyHTML = "";
+
+    if (activeTab === "kosakata") {
+        bodyHTML = `
+            <div class="vocab-grid">
+                ${bab.kosakata.map(item => `
+                    <div class="vocab-card">
+                        <div>
+                            <div class="vocab-arab">${item.arab}</div>
+                            <div class="vocab-latin">${item.latin}</div>
+                            <div class="vocab-arti">${item.arti}</div>
+                        </div>
+                        <button class="audio-btn" onclick="speakArabic('${item.arab.replace(/'/g, "\'")}')">🔊 Dengarkan</button>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    } else if (activeTab === "hiwar") {
+        bodyHTML = `
+            <div class="hiwar-list">
+                ${bab.hiwar.map(item => `
+                    <div class="hiwar-item">
+                        <div class="hiwar-top">
+                            <span class="speaker-badge">${item.pembicara}</span>
+                            <button class="audio-btn" style="margin:0" onclick="speakArabic('${item.arab.replace(/'/g, "\'")}')">🔊 Putar Suara</button>
+                        </div>
+                        <div class="hiwar-arab">${item.arab}</div>
+                        <div class="hiwar-indo">${item.indo}</div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    } else if (activeTab === "bacaan") {
+        bodyHTML = `
+            <div class="bacaan-controls">
+                <button class="btn-outline" onclick="toggleTranslation()">
+                    ${showTranslation ? '🙈 Sembunyikan Terjemahan' : '👁️ Tampilkan Terjemahan'}
+                </button>
+            </div>
+            <div>
+                ${bab.bacaan.map((item, idx) => `
+                    <div class="bacaan-card">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                            <span style="font-size:0.8rem; font-weight:700; color:var(--primary);">Baris ${idx + 1}</span>
+                            <button class="audio-btn" style="margin:0" onclick="speakArabic('${item.arab.replace(/'/g, "\'")}')">🔊 Dengarkan</button>
+                        </div>
+                        <div class="bacaan-arab">${item.arab}</div>
+                        <div class="bacaan-indo ${showTranslation ? '' : 'hidden'}">${item.indo}</div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    } else if (activeTab === "latihan") {
+        const total = bab.latihan.length;
+        const answeredCount = Object.keys(quizState).length;
+        let correctCount = 0;
+        Object.entries(quizState).forEach(([qIdx, ansIdx]) => {
+            if (bab.latihan[qIdx].jawaban === ansIdx) correctCount++;
+        });
+        const score = Math.round((correctCount / total) * 100);
+
+        bodyHTML = `
+            <div class="score-banner">
+                <span>Terjawab: ${answeredCount} / ${total} Soal</span>
+                <span>Skor Sementara: ${score} (Benar: ${correctCount})</span>
+                <button class="btn-outline" onclick="resetQuiz()">🔄 Ulangi Latihan</button>
+            </div>
+            <div>
+                ${bab.latihan.map((q, qIdx) => {
+                    const userAns = quizState[qIdx];
+                    const isAnswered = userAns !== undefined;
+                    return `
+                        <div class="quiz-card">
+                            <div class="quiz-q">${qIdx + 1}. ${q.pertanyaan}</div>
+                            <div class="quiz-options">
+                                ${q.opsi.map((opt, oIdx) => {
+                                    let cls = "quiz-opt";
+                                    if (isAnswered) {
+                                        if (oIdx === q.jawaban) cls += " correct";
+                                        else if (oIdx === userAns) cls += " wrong";
+                                    }
+                                    return `<button class="${cls}" ${isAnswered ? 'disabled' : ''} onclick="answerQuiz(${qIdx}, ${oIdx})">${String.fromCharCode(65 + oIdx)}. ${opt}</button>`;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `;
+    } else if (activeTab === "game") {
+        const item = bab.game[gameState.index];
+        bodyHTML = `
+            <div class="game-box">
+                <div class="game-progress">Soal ${gameState.index + 1} dari ${bab.game.length}</div>
+                <div class="game-target-indo">Susunlah menjadi kalimat Bahasa Arab untuk:<br>"${item.arti}"</div>
+                
+                <div class="answer-area">
+                    ${gameState.selectedWords.length === 0 
+                        ? '<span style="color:#94a3b8; font-family:Plus Jakarta Sans; direction:ltr; font-size:0.9rem;">Klik potongan kata di bawah untuk menyusun kalimat di sini...</span>' 
+                        : gameState.selectedWords.map((w, i) => `<button class="word-chip in-answer" onclick="removeWord(${i})">${w}</button>`).join('')
+                    }
+                </div>
+
+                <div class="word-bank">
+                    ${gameState.availableWords.map((w, i) => `<button class="word-chip" onclick="pickWord(${i})">${w}</button>`).join('')}
+                </div>
+
+                <div class="game-actions">
+                    <button class="btn-primary" onclick="checkGameAnswer()">✅ Periksa Jawaban</button>
+                    <button class="btn-outline" onclick="resetGame(${gameState.index})">🔄 Reset Susunan</button>
+                    ${gameState.index < bab.game.length - 1 
+                        ? `<button class="btn-outline" onclick="resetGame(${gameState.index + 1})">Soal Berikutnya ➡</button>` 
+                        : `<button class="btn-outline" onclick="resetGame(0)">🔁 Mulai dari Awal</button>`
+                    }
+                </div>
+
+                <div class="game-feedback">${gameState.status}</div>
+            </div>
+        `;
+    }
+
+    main.innerHTML = headerHTML + bodyHTML;
+}
+
+function toggleTranslation() {
+    showTranslation = !showTranslation;
+    renderMain();
+}
+
+function answerQuiz(qIdx, oIdx) {
+    quizState[qIdx] = oIdx;
+    renderMain();
+}
+
+function resetQuiz() {
+    quizState = {};
+    renderMain();
+}
+
+function resetGame(idx) {
+    const bab = semuaMateri.find(b => b.id === activeBabId) || semuaMateri[0];
+    const target = bab.game[idx];
+    const shuffled = [...target.kata];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    gameState = {
+        index: idx,
+        selectedWords: [],
+        availableWords: shuffled,
+        status: ""
+    };
+    if (activeTab === "game") renderMain();
+}
+
+function pickWord(availIdx) {
+    const word = gameState.availableWords.splice(availIdx, 1)[0];
+    gameState.selectedWords.push(word);
+    gameState.status = "";
+    renderMain();
+}
+
+function removeWord(selIdx) {
+    const word = gameState.selectedWords.splice(selIdx, 1)[0];
+    gameState.availableWords.push(word);
+    gameState.status = "";
+    renderMain();
+}
+
+function checkGameAnswer() {
+    const bab = semuaMateri.find(b => b.id === activeBabId) || semuaMateri[0];
+    const correctSentence = bab.game[gameState.index].kata.join(" ");
+    const userSentence = gameState.selectedWords.join(" ");
+
+    if (userSentence === correctSentence) {
+        gameState.status = "<span style='color:var(--success)'>🎉 Mumtaz! Susunan kalimat Anda benar!</span>";
+    } else {
+        gameState.status = "<span style='color:var(--danger)'>❌ Belum tepat, coba periksa kembali urutan katanya!</span>";
+    }
+    renderMain();
+}
+
+window.onload = initApp;
+</script>
+
+</body>
+</html>
